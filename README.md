@@ -24,8 +24,11 @@ docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding
 
 Dev
 ```sh
-docker run -it --rm --user=1000:1000 -v $(pwd):/app -w /app yapro/api-platform-understanding:latest bash
-COMPOSER_MEMORY_LIMIT=-1 composer install -o
+docker run -it --rm --user=1000:1000 --net=host -v $(pwd):/app -w /app yapro/api-platform-understanding:latest bash
+COMPOSER_MEMORY_LIMIT=-1 composer install -o && \
+bin/console doctrine:database:create && \
+bin/console doctrine:schema:create && \
+php -S 127.0.0.1:8000 -t public
 ```
 
 Debug PHP:
