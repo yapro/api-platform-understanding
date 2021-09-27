@@ -26,8 +26,8 @@ Dev
 ```sh
 docker run -it --rm --user=1000:1000 --net=host -v $(pwd):/app -w /app yapro/api-platform-understanding:latest bash
 COMPOSER_MEMORY_LIMIT=-1 composer install -o && \
-bin/console doctrine:database:create && \
-bin/console doctrine:schema:create && \
+bin/console doctrine:schema:drop --full-database --force -v && \
+bin/console doctrine:schema:update --force -v && \
 php -S 127.0.0.1:8000 -t public
 ```
 
@@ -39,7 +39,7 @@ docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding
      XDEBUG_SESSION=common \
      XDEBUG_MODE=debug \
      XDEBUG_CONFIG=\"max_nesting_level=200 client_port=9003 client_host=172.16.30.130\" \
-     vendor/bin/phpunit --cache-result-file=/tmp/phpunit.cache --testsuite=Functional"
+     vendor/bin/phpunit --cache-result-file=/tmp/phpunit.cache tests/Functional"
 ```
 Если с xdebug что-то не получается, напишите: php -dxdebug.log='/tmp/xdebug.log' и смотрите в лог.
 

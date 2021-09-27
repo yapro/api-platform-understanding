@@ -6936,16 +6936,16 @@
         },
         {
             "name": "yapro/symfony-http-client-ext",
-            "version": "v1.0.1",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yapro/symfony-http-client-ext.git",
-                "reference": "e84586f7cb2e7aea2c7d6850a18072a53333d709"
+                "reference": "a5332d29ae20981a4f640362fa54807fd87893a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yapro/symfony-http-client-ext/zipball/e84586f7cb2e7aea2c7d6850a18072a53333d709",
-                "reference": "e84586f7cb2e7aea2c7d6850a18072a53333d709",
+                "url": "https://api.github.com/repos/yapro/symfony-http-client-ext/zipball/a5332d29ae20981a4f640362fa54807fd87893a5",
+                "reference": "a5332d29ae20981a4f640362fa54807fd87893a5",
                 "shasum": ""
             },
             "require": {
@@ -6985,9 +6985,9 @@
             ],
             "support": {
                 "issues": "https://github.com/yapro/symfony-http-client-ext/issues",
-                "source": "https://github.com/yapro/symfony-http-client-ext/tree/v1.0.1"
+                "source": "https://github.com/yapro/symfony-http-client-ext/tree/v1.0.3"
             },
-            "time": "2021-09-04T09:39:22+00:00"
+            "time": "2021-09-27T04:31:02+00:00"
         },
         {
             "name": "yapro/symfony-http-test-ext",
@@ -7058,8 +7058,6 @@
         "ext-iconv": "*",
         "ext-json": "*"
     },
-    "platform-dev": {
-        "php": "*"
-    },
+    "platform-dev": [],
     "plugin-api-version": "2.0.0"
 }

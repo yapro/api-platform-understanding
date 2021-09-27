@@ -2,31 +2,20 @@
 
 <!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/bin/.phpunit/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          backupGlobals="false"
          colors="true"
          bootstrap="tests/bootstrap.php"
+         convertDeprecationsToExceptions="false"
 >
     <php>
+        <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
-        <ini name="display_errors" value="On" />
-        <ini name="display_startup_errors" value="On" />
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
-        <env name="BOOTSTRAP_CLEAR_CACHE_ENV" value="test"/>
-
-        <!-- ###+ doctrine/doctrine-bundle ### -->
-        <!-- Format described at https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#connecting-using-a-url -->
-        <!-- IMPORTANT: You MUST configure your server version, either here or in config/packages/doctrine.yaml -->
-        <!--  -->
-        <!-- DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db" -->
-        <!-- DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7" -->
-        <env name="DATABASE_URL" value="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=13&amp;charset=utf8"/>
-        <!-- ###- doctrine/doctrine-bundle ### -->
-
-        <!-- ###+ nelmio/cors-bundle ### -->
-        <env name="CORS_ALLOW_ORIGIN" value="'^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'"/>
-        <!-- ###- nelmio/cors-bundle ### -->
+        <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
+        <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+        <server name="KERNEL_CLASS" value="YaPro\ApiPlatformUnderstanding\Kernel" />
     </php>
 
     <testsuites>
@@ -35,13 +24,20 @@
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
-            <directory>src</directory>
-        </whitelist>
-    </filter>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
     </listeners>
+
+    <!-- Run `composer require symfony/panther` before enabling this extension -->
+    <!--
+    <extensions>
+        <extension class="Symfony\Component\Panther\ServerExtension" />
+    </extensions>
+    -->
 </phpunit>

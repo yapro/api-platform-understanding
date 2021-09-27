@@ -1,6 +1,7 @@
 /.idea
 /composer.lock
 /symfony.lock
+/db.sqlite
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -13,7 +14,6 @@
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
-.phpunit
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###

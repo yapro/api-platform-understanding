@@ -5,18 +5,15 @@ api_platform:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
-    # Разрешаем клиенту самостоятельно управлять пагинацией:
     defaults:
+        # Разрешаем клиенту самостоятельно управлять пагинацией:
         pagination_client_enabled: true
-
-    collection:
-        pagination:
-            items_per_page: 100 # Default 30
-            # Ниже описанные правила можно включать не глобально, а только для определенной сущности или изменять
-            # только для определенной сущности, например так: @ApiResource(
-            # attributes={"pagination_client_enabled"=true, "pagination_client_items_per_page"=true, "pagination_maximum_items_per_page"=11},
-            # Разрешаем клиенту указывать свое кол-во возвращаемых items на одной странице:
-            # example: /books?pagination=true&page=2&itemsPerPage=4
-            client_items_per_page: true
-            # Ограничиваем клиенту указание большого кол-ва возвращаемых items на одной странице:
-            maximum_items_per_page: 100
+        pagination_items_per_page: 100 # Default 30
+        # Ниже описанные правила можно включать не глобально, а только для определенной сущности или изменять
+        # только для определенной сущности, например так: @ApiResource(
+        # attributes={"pagination_client_enabled"=true, "pagination_client_items_per_page"=true, "pagination_maximum_items_per_page"=11},
+        # Разрешаем клиенту указывать свое кол-во возвращаемых items на одной странице:
+        # example: /books?pagination=true&page=2&itemsPerPage=4
+        pagination_client_items_per_page: true
+        # Ограничиваем клиенту указание большого кол-ва возвращаемых items на одной странице:
+        pagination_maximum_items_per_page: 100
