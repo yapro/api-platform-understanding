@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c1ebf1d9c7df90b72ed82107f4558a9",
+    "content-hash": "d6e017bfcd371bd78d0bfa33d8181260",
     "packages": [
         {
             "name": "api-platform/core",
@@ -6988,6 +6988,62 @@
                 "source": "https://github.com/yapro/symfony-http-client-ext/tree/v1.0.1"
             },
             "time": "2021-09-04T09:39:22+00:00"
+        },
+        {
+            "name": "yapro/symfony-http-test-ext",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yapro/symfony-http-test-ext.git",
+                "reference": "d62d970a9f278df1c3e8e71d6073111f63b9ce8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yapro/symfony-http-test-ext/zipball/d62d970a9f278df1c3e8e71d6073111f63b9ce8d",
+                "reference": "d62d970a9f278df1c3e8e71d6073111f63b9ce8d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1",
+                "yapro/symfony-http-client-ext": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*",
+                "symfony/browser-kit": "*",
+                "symfony/framework-bundle": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "YaPro\\SymfonyHttpTestExt\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lebedenko Nikolay",
+                    "email": "totx@ya.ru",
+                    "homepage": "http://yapro.ru"
+                }
+            ],
+            "description": "Symfony http testing",
+            "homepage": "http://yapro.ru",
+            "keywords": [
+                "extensions",
+                "http",
+                "library",
+                "php",
+                "symfony",
+                "testing"
+            ],
+            "support": {
+                "issues": "https://github.com/yapro/symfony-http-test-ext/issues",
+                "source": "https://github.com/yapro/symfony-http-test-ext/tree/v1.0.1"
+            },
+            "time": "2021-09-04T07:18:49+00:00"
         }
     ],
     "packages-dev": [],
