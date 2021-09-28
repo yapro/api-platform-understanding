@@ -17,6 +17,13 @@ framework:
     php_errors:
         log: true
 
+# для тестирования в prod env с помощью \Symfony\Bundle\FrameworkBundle\KernelBrowser
+when@prod:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
+
 when@test:
     framework:
         test: true
