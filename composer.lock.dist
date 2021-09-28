@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6e017bfcd371bd78d0bfa33d8181260",
+    "content-hash": "dd7bc26a5cd92fa115f4340123ce0e40",
     "packages": [
         {
             "name": "api-platform/core",
@@ -3831,16 +3831,16 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v5.3.7",
+            "version": "v5.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "da8638ffecefc4e8ba2bc848d7b61a408119b333"
+                "reference": "c6370fe2c0a445aedc08f592a6a3149da1fea4c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/da8638ffecefc4e8ba2bc848d7b61a408119b333",
-                "reference": "da8638ffecefc4e8ba2bc848d7b61a408119b333",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/c6370fe2c0a445aedc08f592a6a3149da1fea4c7",
+                "reference": "c6370fe2c0a445aedc08f592a6a3149da1fea4c7",
                 "shasum": ""
             },
             "require": {
@@ -3898,7 +3898,7 @@
             "description": "Provides powerful methods to fetch HTTP resources synchronously or asynchronously",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-client/tree/v5.3.7"
+                "source": "https://github.com/symfony/http-client/tree/v5.3.8"
             },
             "funding": [
                 {
@@ -3914,7 +3914,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-28T16:24:37+00:00"
+            "time": "2021-09-07T10:45:28+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -6883,18 +6883,50 @@
             "time": "2020-09-25T08:01:41+00:00"
         },
         {
+            "name": "yapro/doctrine-ext",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yapro/doctrine-ext.git",
+                "reference": "4504840ce16aedb82d9af2d58fb1df664d187b39"
+            },
+            "require": {
+                "doctrine/orm": "*",
+                "php": ">=7.0.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "YaPro\\DoctrineExt\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Lebedenko Nikolay",
+                    "email": "totx@ya.ru",
+                    "role": "Developer",
+                    "homepage": "http://yapro.ru"
+                }
+            ],
+            "description": "Doctrine extensions",
+            "keywords": [
+                "doctrine",
+                "extension",
+                "php"
+            ],
+            "time": "2021-09-28T04:19:20+00:00"
+        },
+        {
             "name": "yapro/helpers",
             "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yapro/helpers.git",
                 "reference": "cf6a6e8595fb0b8caa193702df2ea42226be703d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yapro/helpers/zipball/cf6a6e8595fb0b8caa193702df2ea42226be703d",
-                "reference": "cf6a6e8595fb0b8caa193702df2ea42226be703d",
-                "shasum": ""
             },
             "require": {
                 "php": ">=7.1"
@@ -6908,7 +6940,6 @@
                     "YaPro\\Helper\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -6928,25 +6959,15 @@
                 "library",
                 "php"
             ],
-            "support": {
-                "issues": "https://github.com/yapro/helpers/issues",
-                "source": "https://github.com/yapro/helpers/tree/v1.0.2"
-            },
             "time": "2021-05-07T09:44:01+00:00"
         },
         {
             "name": "yapro/symfony-http-client-ext",
-            "version": "v1.0.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yapro/symfony-http-client-ext.git",
                 "reference": "a5332d29ae20981a4f640362fa54807fd87893a5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yapro/symfony-http-client-ext/zipball/a5332d29ae20981a4f640362fa54807fd87893a5",
-                "reference": "a5332d29ae20981a4f640362fa54807fd87893a5",
-                "shasum": ""
             },
             "require": {
                 "php": ">=7.1",
@@ -6957,13 +6978,13 @@
                 "phpunit/phpunit": "*",
                 "symfony/http-foundation": "*"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "YaPro\\SymfonyHttpClientExt\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -6983,25 +7004,15 @@
                 "php",
                 "symfony"
             ],
-            "support": {
-                "issues": "https://github.com/yapro/symfony-http-client-ext/issues",
-                "source": "https://github.com/yapro/symfony-http-client-ext/tree/v1.0.3"
-            },
-            "time": "2021-09-27T04:31:02+00:00"
+            "time": "2021-09-27T08:29:45+00:00"
         },
         {
             "name": "yapro/symfony-http-test-ext",
-            "version": "v1.0.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yapro/symfony-http-test-ext.git",
-                "reference": "d62d970a9f278df1c3e8e71d6073111f63b9ce8d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yapro/symfony-http-test-ext/zipball/d62d970a9f278df1c3e8e71d6073111f63b9ce8d",
-                "reference": "d62d970a9f278df1c3e8e71d6073111f63b9ce8d",
-                "shasum": ""
+                "reference": "c8360bc551b3fc33235e52b74eb9f54faa563bbc"
             },
             "require": {
                 "php": ">=7.1",
@@ -7012,13 +7023,13 @@
                 "symfony/browser-kit": "*",
                 "symfony/framework-bundle": "*"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "YaPro\\SymfonyHttpTestExt\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -7039,17 +7050,17 @@
                 "symfony",
                 "testing"
             ],
-            "support": {
-                "issues": "https://github.com/yapro/symfony-http-test-ext/issues",
-                "source": "https://github.com/yapro/symfony-http-test-ext/tree/v1.0.1"
-            },
-            "time": "2021-09-04T07:18:49+00:00"
+            "time": "2021-09-28T04:18:28+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "yapro/doctrine-ext": 20,
+        "yapro/symfony-http-client-ext": 20,
+        "yapro/symfony-http-test-ext": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

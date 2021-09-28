@@ -5,6 +5,12 @@
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
+    "repositories": [
+        { "type": "git", "url": "https://github.com/yapro/helpers.git"},
+        { "type": "git", "url": "https://github.com/yapro/doctrine-ext.git"},
+        { "type": "git", "url": "https://github.com/yapro/symfony-http-test-ext.git"},
+        { "type": "git", "url": "https://github.com/yapro/symfony-http-client-ext.git"}
+    ],
     "require": {
         "php": ">=7.4",
         "ext-ctype": "*",
@@ -35,8 +41,9 @@
         "symfony/twig-bundle": "5.3.*",
         "symfony/validator": "5.3.*",
         "symfony/yaml": "5.3.*",
-        "yapro/symfony-http-client-ext": "^1.0",
-        "yapro/symfony-http-test-ext": "^1.0"
+        "yapro/doctrine-ext": "dev-master",
+        "yapro/symfony-http-client-ext": "dev-master",
+        "yapro/symfony-http-test-ext": "dev-master"
     },
     "require-dev": {
     },
