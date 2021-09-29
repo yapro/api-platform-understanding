@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace YaPro\ApiPlatformUnderstanding\Tests\Functional;
@@ -11,7 +12,7 @@ use YaPro\SymfonyHttpTestExt\BaseTestCase;
 
 class ManyItemsTest extends BaseTestCase
 {
-	use HttpClientJsonLdExtTrait;
+    use HttpClientJsonLdExtTrait;
     use ReloadDatabaseTrait;
 
     protected static EntityManagerInterface $entityManager;
@@ -27,13 +28,12 @@ class ManyItemsTest extends BaseTestCase
         self::truncateAllTablesInSqLite();
 
         $json = '
-		{
-		  "isbn": "string",
-		  "title": "string",
-		  "publicationDate": "2021-06-27T05:39:19.583Z",
-		  "nonExistentField": "данное поле и значение будет проигнорировано"
-		}
-		';
+        {
+          "isbn": "string",
+          "title": "string",
+          "publicationDate": "2021-06-27T05:39:19.583Z"
+        }
+        ';
         // ApiPlatform not supporting multi insert
         $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
         $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
@@ -42,7 +42,8 @@ class ManyItemsTest extends BaseTestCase
 
         $this->getLd('/api/books');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertJsonResponse('
+        $this->assertJsonResponse(
+            '
         {
           "@context": "/api/contexts/Book",
           "@id": "/api/books",
@@ -76,7 +77,8 @@ class ManyItemsTest extends BaseTestCase
               "hydra:next":  "/api/books?page=2"
           }
         }
-		');
+        '
+        );
     }
 
     /**
@@ -86,7 +88,8 @@ class ManyItemsTest extends BaseTestCase
     {
         $this->getLd('/api/books?page=2&itemsPerPage=1');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertJsonResponse('
+        $this->assertJsonResponse(
+            '
         {
           "@context": "/api/contexts/Book",
           "@id": "/api/books",
@@ -112,7 +115,8 @@ class ManyItemsTest extends BaseTestCase
               "hydra:next":      "/api/books?itemsPerPage=1&page=3"
           }
         }
-		');
+        '
+        );
     }
 
     public function testCreateBookAndTwoReviews(): int
@@ -120,29 +124,30 @@ class ManyItemsTest extends BaseTestCase
         self::truncateAllTablesInSqLite();
 
         $json = '
-		{
-		  "isbn": "isbn",
-		  "title": "title",
-		  "publicationDate": "2021-06-27T05:39:19.583Z",
-		  "reviews": [
-		    {"author": "author1"},
-		    {"author": "author2"}
-		  ]
-		}
-		';
+        {
+          "isbn": "isbn",
+          "title": "title",
+          "publicationDate": "2021-06-27T05:39:19.583Z",
+          "reviews": [
+            {"author": "author1"},
+            {"author": "author2"}
+          ]
+        }
+        ';
         $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
+        $this->assertResourceIsCreated();
 
         // НЕОЖИДАННО: при отсутствии метода Book::removeReview() возвращается пустой список "reviews": []
         $this->assertJsonResponse('
-		{
-		  "@context": "/api/contexts/Book",
-		  "@id": "/api/books/1",
-		  "@type": "Book",
-		  "id": 1,
-		  "isbn": "isbn",
-		  "title": "title",
-		  "publicationDate": "2021-06-27T05:39:19+00:00",
-		    "reviews": [
+        {
+          "@context": "/api/contexts/Book",
+          "@id": "/api/books/1",
+          "@type": "Book",
+          "id": 1,
+          "isbn": "isbn",
+          "title": "title",
+          "publicationDate": "2021-06-27T05:39:19+00:00",
+            "reviews": [
                 {
                   "@id": "/api/reviews/1",
                   "@type": "Review",
@@ -158,8 +163,8 @@ class ManyItemsTest extends BaseTestCase
                   "rating": 0
                 }
             ]
-		}
-		');
+        }
+        ');
         return $this->assertResourceIsCreated();
     }
 }

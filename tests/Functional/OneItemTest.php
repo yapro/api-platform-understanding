@@ -11,7 +11,7 @@ use YaPro\SymfonyHttpTestExt\BaseTestCase;
 
 class OneItemTest extends BaseTestCase
 {
-	use HttpClientJsonLdExtTrait;
+    use HttpClientJsonLdExtTrait;
     use ReloadDatabaseTrait;
 
     protected static EntityManagerInterface $entityManager;
@@ -23,33 +23,33 @@ class OneItemTest extends BaseTestCase
     }
 
     public function testCreateBook(): int
-	{
+    {
         self::truncateAllTablesInSqLite();
 
-		$json = '
-		{
-		  "isbn": "string",
-		  "title": "string",
-		  "publicationDate": "2021-06-27T05:39:19.583Z",
-		  "nonExistentField": "данное поле и значение будет проигнорировано"
-		}
-		';
-		$crawler = $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
-		$this->assertJsonResponse('
-		{
-		  "@context": "/api/contexts/Book",
-		  "@id": "/api/books/1",
-		  "@type": "Book",
-		  "id": 1,
-		  "isbn": "string",
-		  "title": "string",
-		  "publicationDate": "2021-06-27T05:39:19+00:00",
-		  "reviews": []
-		}
-		');
-		// https://github.com/api-platform/api-platform/blob/main/api/tests/Api/GreetingsTest.php
-		return $this->assertResourceIsCreated();
-	}
+        $json = '
+        {
+          "isbn": "string",
+          "title": "string",
+          "publicationDate": "2021-06-27T05:39:19.583Z",
+          "nonExistentField": "данное поле будет проигнорировано т.к. не существует в сущности"
+        }
+        ';
+        $crawler = $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
+        $this->assertJsonResponse('
+        {
+          "@context": "/api/contexts/Book",
+          "@id": "/api/books/1",
+          "@type": "Book",
+          "id": 1,
+          "isbn": "string",
+          "title": "string",
+          "publicationDate": "2021-06-27T05:39:19+00:00",
+          "reviews": []
+        }
+        ');
+        // https://github.com/api-platform/api-platform/blob/main/api/tests/Api/GreetingsTest.php
+        return $this->assertResourceIsCreated();
+    }
 
     /**
      * @depends testCreateBook
@@ -62,17 +62,17 @@ class OneItemTest extends BaseTestCase
         $this->getLd('/api/books/' . $bookId);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertJsonResponse('
-		{
-		  "@context": "/api/contexts/Book",
-		  "@id": "/api/books/1",
-		  "@type": "Book",
-		  "id": 1,
-		  "isbn": "string",
-		  "title": "string",
-		  "publicationDate": "2021-06-27T05:39:19+00:00",
-		  "reviews": []
-		}
-		');
+            {
+              "@context": "/api/contexts/Book",
+              "@id": "/api/books/1",
+              "@type": "Book",
+              "id": 1,
+              "isbn": "string",
+              "title": "string",
+              "publicationDate": "2021-06-27T05:39:19+00:00",
+              "reviews": []
+            }
+        ');
 
         return $bookId;
     }
@@ -102,7 +102,7 @@ class OneItemTest extends BaseTestCase
           ],
           "hydra:totalItems": 1
         }
-		');
+        ');
 
         return $bookId;
     }
@@ -136,7 +136,7 @@ class OneItemTest extends BaseTestCase
             "@type": "hydra:PartialCollectionView"
           }
         }
-		');
+        ');
 
         // То же самое, только передаем массивом параметров + не передается page + передается параметр pagination
         $this->getLd('/api/books', [
@@ -166,7 +166,7 @@ class OneItemTest extends BaseTestCase
             "@type": "hydra:PartialCollectionView"
           }
         }
-		');
+        ');
     }
 
     /**
@@ -201,7 +201,7 @@ class OneItemTest extends BaseTestCase
             "@type": "hydra:PartialCollectionView"
           }
         }
-		');
+        ');
     }
 
     /**
@@ -213,25 +213,25 @@ class OneItemTest extends BaseTestCase
     public function testUpdateBook(int $bookId): int
     {
         $json = '
-		{
-		  "isbn": "new string",
-		  "title": "string",
-		  "publicationDate": "2022-06-27T05:39:19.583Z"
-		}
-		';
+            {
+              "isbn": "new string",
+              "title": "string",
+              "publicationDate": "2022-06-27T05:39:19.583Z"
+            }
+            ';
         $this->putLd('/api/books/' . $bookId, $this->getJsonHelper()->jsonDecode($json, true));
         $this->assertJsonResponse('
-		{
-		  "@context": "/api/contexts/Book",
-		  "@id": "/api/books/1",
-		  "@type": "Book",
-		  "id": 1,
-		  "isbn": "new string",
-		  "title": "string",
-		  "publicationDate": "2022-06-27T05:39:19+00:00",
-		  "reviews": []
-		}
-		');
+            {
+              "@context": "/api/contexts/Book",
+              "@id": "/api/books/1",
+              "@type": "Book",
+              "id": 1,
+              "isbn": "new string",
+              "title": "string",
+              "publicationDate": "2022-06-27T05:39:19+00:00",
+              "reviews": []
+            }
+            ');
         return $this->assertResourceIsUpdated($bookId);
     }
 
@@ -287,10 +287,10 @@ class OneItemTest extends BaseTestCase
     {
         // title не указан и выбрасывается \Doctrine\DBAL\Exception\NotNullConstraintViolationException
         $json = '
-		{
-		  "isbn": "string"
-		}
-		';
+            {
+              "isbn": "string"
+            }
+            ';
         $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
         $this->assertResponseStatusCodeSame(Response::HTTP_INTERNAL_SERVER_ERROR);
         if ($_SERVER['APP_ENV'] === 'prod') {
