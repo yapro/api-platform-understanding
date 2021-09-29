@@ -9,7 +9,7 @@ use YaPro\DoctrineExt\ReloadDatabaseTrait;
 use YaPro\SymfonyHttpClientExt\HttpClientJsonLdExtTrait;
 use YaPro\SymfonyHttpTestExt\BaseTestCase;
 
-class BaseTest extends BaseTestCase
+class OneItemTest extends BaseTestCase
 {
 	use HttpClientJsonLdExtTrait;
     use ReloadDatabaseTrait;

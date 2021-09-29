@@ -8,7 +8,7 @@ api_platform:
     defaults:
         # Разрешаем клиенту самостоятельно управлять пагинацией:
         pagination_client_enabled: true
-        pagination_items_per_page: 100 # Default 30
+        pagination_items_per_page: 2 # Default 30
         # Ниже описанные правила можно включать не глобально, а только для определенной сущности или изменять
         # только для определенной сущности, например так: @ApiResource(
         # attributes={"pagination_client_enabled"=true, "pagination_client_items_per_page"=true, "pagination_maximum_items_per_page"=11},
