@@ -14,7 +14,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity
  * @ApiResource(
  *     normalizationContext={
- *         "groups": {"apiRead"}
+ *         "groups": {"apiRead"},
+ *         "skip_null_values" = false
  *     },
  *     denormalizationContext={
  *         "groups": {"apiWrite"}
@@ -36,6 +37,12 @@ class Snake
      * @Groups({"apiRead", "apiWrite"})
      */
     private string $title = '';
+
+    /**
+     * @ORM\Column(nullable=true)
+     * @Groups({"apiRead", "apiWrite"})
+     */
+    public ?int $length = null;
 
     /**
      * @var SnakeColor[]|Collection
@@ -60,6 +67,11 @@ class Snake
     {
         $this->title = $title;
         return $this;
+    }
+
+    public function getLength(): ?int
+    {
+        return $this->length;
     }
 
     /**

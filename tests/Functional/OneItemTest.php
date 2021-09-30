@@ -307,13 +307,25 @@ class OneItemTest extends BaseTestCase
         }
     }
 
+    /**
+     * НЕОЖИДАННО: создаем Book не указывая значение полю "isbn", таким образом значением поля будет null, в этом случае
+     * запрашивая данные видим, что в результате отсутствует поле "isbn", ApiPlatform удаляет поля со значением null. А
+     * чтобы ApiPlatform оставлял поля со значением null нужно указать:
+     * @ApiResource(
+     *     normalizationContext={
+     *         "skip_null_values" = false
+     *     }
+     * )
+     * Происходит это в \ApiPlatform\Core\Serializer\SerializerContextBuilder::createFromRequest() и это очень странное
+     * поведение, потому что в Symfony serializer по умолчанию все наоборот:
+     * https://symfony.com/doc/current/components/serializer.html#skipping-null-values
+     */
     public function testDefaultPagination()
     {
         self::truncateAllTablesInSqLite();
 
         $json = '
         {
-          "isbn": "string",
           "title": "string",
           "publicationDate": "2021-06-27T05:39:19.583Z"
         }
@@ -336,7 +348,6 @@ class OneItemTest extends BaseTestCase
               "@id": "/api/books/1",
               "@type": "Book",
               "id": 1,
-              "isbn": "string",
               "title": "string",
               "publicationDate": "2021-06-27T05:39:19+00:00",
               "reviews": []
@@ -345,7 +356,6 @@ class OneItemTest extends BaseTestCase
               "@id": "/api/books/2",
               "@type": "Book",
               "id": 2,
-              "isbn": "string",
               "title": "string",
               "publicationDate": "2021-06-27T05:39:19+00:00",
               "reviews": []
@@ -380,7 +390,6 @@ class OneItemTest extends BaseTestCase
               "@id": "/api/books/2",
               "@type": "Book",
               "id": 2,
-              "isbn": "string",
               "title": "string",
               "publicationDate": "2021-06-27T05:39:19+00:00",
               "reviews": []

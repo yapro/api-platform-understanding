@@ -20,6 +20,9 @@ use YaPro\SymfonyHttpTestExt\BaseTestCase;
  *   сущностями, нужно чтобы в основной сущности был создан метод removeKid()
  * НЕОЖИДАННО: если в ApiResource у связанной сущности поле id приватное, то, чтобы прочитать сущность со связанными
  *   сущностями, нужно чтобы в связанной сущности был создан метод getId()
+ * Больше информации:
+ * - https://symfonycasts.com/screencast/api-platform/collections-create
+ * - https://symfonycasts.com/screencast/api-platform/embedded-write
  */
 class ManyItemsTest extends BaseTestCase
 {
@@ -34,22 +37,36 @@ class ManyItemsTest extends BaseTestCase
         self::$entityManager = static::getContainer()->get(EntityManagerInterface::class);
     }
 
+    /*
+     * НЕОЖИДАННО: чтобы создавать Snake + несколько SnakeColor, нужно:
+     * 1. в аннотации к классам Snake и SnakeColor прописать:
+     * @ApiResource(
+     *     denormalizationContext={
+     *         "groups": {"apiWrite"}
+     *     }
+     * )
+     *
+     * 2. всем заполняемым полям в Snake и SnakeColor прописать:
+     * @Groups({"apiWrite"})
+     *
+     *
+     * НЕОЖИДАННО: чтобы получить Snake + несколько SnakeColor, нужно:
+     * 1. в аннотации к классам Snake и SnakeColor прописать:
+     * @ApiResource(
+     *     normalizationContext={
+     *         "groups": {"apiRead"}
+     *     }
+     * )
+     *
+     * 2. всем заполняемым полям в Snake и SnakeColor прописать:
+     * @Groups({"apiRead"})
+     *
+     * 3. в классе Snake должен быть объявлен метод removeSnakeColor(), иначе возвратится пустой список "snakeColors": []
+     */
     public function testCreateSnakeAndTwoSnakeColor(): int
     {
         self::truncateAllTablesInSqLite();
 
-        /*
-         * НЕОЖИДАННО: чтобы создавать Snake + несколько SnakeColor, нужно:
-         * 1. в аннотации к классам Snake и SnakeColor прописать:
-         * @ApiResource(
-         *     denormalizationContext={
-         *         "groups": {"apiWrite"}
-         *     }
-         * )
-         *
-         * 2. всем заполняемым полям в Snake и SnakeColor прописать:
-         * @Groups({"apiWrite"})
-         */
         $json = '
         {
           "title": "cobra",
@@ -61,21 +78,6 @@ class ManyItemsTest extends BaseTestCase
         ';
         $this->postLd('/api/snakes', $this->getJsonHelper()->jsonDecode($json, true));
         $this->assertResourceIsCreated();
-
-        /*
-         * НЕОЖИДАННО: чтобы получить Snake + несколько SnakeColor, нужно:
-         * 1. в аннотации к классам Snake и SnakeColor прописать:
-         * @ApiResource(
-         *     normalizationContext={
-         *         "groups": {"apiRead"}
-         *     }
-         * )
-         *
-         * 2. всем заполняемым полям в Snake и SnakeColor прописать:
-         * @Groups({"apiRead"})
-         *
-         * 3. в классе Snake должен быть объявлен метод removeSnakeColor(), иначе возвратится пустой список "snakeColors": []
-         */
         $this->assertJsonResponse('
         {
           "@context": "/api/contexts/Snake",
@@ -83,6 +85,7 @@ class ManyItemsTest extends BaseTestCase
           "@type": "Snake",
           "id": 1,
           "title": "cobra",
+          "length": null,
           "snakeColors": [
               {
                 "@id": "/api/snake_colors/1",
