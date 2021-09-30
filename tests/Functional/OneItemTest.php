@@ -306,4 +306,96 @@ class OneItemTest extends BaseTestCase
             // в респонсе будет стектрейс исключения
         }
     }
+
+    public function testDefaultPagination()
+    {
+        self::truncateAllTablesInSqLite();
+
+        $json = '
+        {
+          "isbn": "string",
+          "title": "string",
+          "publicationDate": "2021-06-27T05:39:19.583Z"
+        }
+        ';
+        // ApiPlatform not supporting multi insert
+        $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
+        $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
+        $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
+        $this->assertResourceIsCreated();
+
+        $this->getLd('/api/books');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertJsonResponse('
+        {
+          "@context": "/api/contexts/Book",
+          "@id": "/api/books",
+          "@type": "hydra:Collection",
+          "hydra:member": [
+            {
+              "@id": "/api/books/1",
+              "@type": "Book",
+              "id": 1,
+              "isbn": "string",
+              "title": "string",
+              "publicationDate": "2021-06-27T05:39:19+00:00",
+              "reviews": []
+            },
+            {
+              "@id": "/api/books/2",
+              "@type": "Book",
+              "id": 2,
+              "isbn": "string",
+              "title": "string",
+              "publicationDate": "2021-06-27T05:39:19+00:00",
+              "reviews": []
+            }
+          ],
+          "hydra:totalItems": 3,
+          "hydra:view": {
+              "@id":         "/api/books?page=1",
+              "@type":       "hydra:PartialCollectionView",
+              "hydra:first": "/api/books?page=1",
+              "hydra:last":  "/api/books?page=2",
+              "hydra:next":  "/api/books?page=2"
+          }
+        }
+        ');
+    }
+
+    /**
+     * @depends testGetBooks
+     */
+    public function testGetBooksAndSpecifyPageAndItemsPerPage()
+    {
+        $this->getLd('/api/books?page=2&itemsPerPage=1');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertJsonResponse('
+        {
+          "@context": "/api/contexts/Book",
+          "@id": "/api/books",
+          "@type": "hydra:Collection",
+          "hydra:member": [
+            {
+              "@id": "/api/books/2",
+              "@type": "Book",
+              "id": 2,
+              "isbn": "string",
+              "title": "string",
+              "publicationDate": "2021-06-27T05:39:19+00:00",
+              "reviews": []
+            }
+          ],
+          "hydra:totalItems": 3,
+          "hydra:view": {
+              "@id":             "/api/books?itemsPerPage=1&page=2",
+              "@type":           "hydra:PartialCollectionView",
+              "hydra:first":     "/api/books?itemsPerPage=1&page=1",
+              "hydra:last":      "/api/books?itemsPerPage=1&page=3",
+              "hydra:previous":  "/api/books?itemsPerPage=1&page=1",
+              "hydra:next":      "/api/books?itemsPerPage=1&page=3"
+          }
+        }
+        ');
+    }
 }

@@ -19,6 +19,8 @@ Tests
 ```sh
 docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app \
   && COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-scripts --no-interaction \
+  bin/console doctrine:schema:drop --full-database --force -v && \
+  bin/console doctrine:schema:update --force -v && \
   && vendor/bin/phpunit --testsuite=Functional"
 ```
 
@@ -33,13 +35,15 @@ php -S 127.0.0.1:8000 -t public
 
 Debug PHP:
 ```sh
-docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app \
-  && COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-scripts --no-interaction \
-  && PHP_IDE_CONFIG=\"serverName=common\" \
-     XDEBUG_SESSION=common \
-     XDEBUG_MODE=debug \
-     XDEBUG_CONFIG=\"max_nesting_level=200 client_port=9003 client_host=172.16.30.130\" \
-     vendor/bin/phpunit --cache-result-file=/tmp/phpunit.cache tests/Functional"
+docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app && \
+  COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-scripts --no-interaction && \
+  bin/console doctrine:schema:drop --full-database --force -v && \
+  bin/console doctrine:schema:update --force -v && \
+  PHP_IDE_CONFIG=\"serverName=common\" \
+  XDEBUG_SESSION=common \
+  XDEBUG_MODE=debug \
+  XDEBUG_CONFIG=\"max_nesting_level=200 client_port=9003 client_host=172.16.30.130\" \
+  vendor/bin/phpunit --cache-result-file=/tmp/phpunit.cache tests/Functional"
 ```
 Если с xdebug что-то не получается, напишите: php -dxdebug.log='/tmp/xdebug.log' и смотрите в лог.
 
