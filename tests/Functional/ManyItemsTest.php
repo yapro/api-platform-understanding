@@ -67,7 +67,7 @@ class ManyItemsTest extends BaseTestCase
     {
         self::truncateAllTablesInSqLite();
 
-        $json = '
+        $this->postLd('/api/snakes', '
         {
           "title": "cobra",
           "snakeColors": [
@@ -75,9 +75,7 @@ class ManyItemsTest extends BaseTestCase
             {"color": "black"}
           ]
         }
-        ';
-        $this->postLd('/api/snakes', $this->getJsonHelper()->jsonDecode($json, true));
-        $this->assertResourceIsCreated();
+        ');
         $this->assertJsonResponse('
         {
           "@context": "/api/contexts/Snake",
@@ -103,5 +101,107 @@ class ManyItemsTest extends BaseTestCase
         }
         ');
         return $this->assertResourceIsCreated();
+    }
+
+    /**
+     * ОЖИДАЕМО: мы не только создали еще одну Snake, но и отвязали от Snake=1 запись SnakeColor=2, привязав к новой Snake
+     *
+     * @depends testCreateSnakeAndTwoSnakeColor
+     * @return int
+     */
+    public function testCreateSnakeWithExistingSnakeColor(): int
+    {
+        $this->postLd('/api/snakes', '
+        {
+          "title": "cobra2",
+          "snakeColors": [
+            "/api/snake_colors/2"
+          ]
+        }
+        ');
+        $this->assertJsonResponse('
+        {
+          "@context": "/api/contexts/Snake",
+          "@id": "/api/snakes/2",
+          "@type": "Snake",
+          "id": 2,
+          "title": "cobra2",
+          "length": null,
+          "snakeColors": [
+              {
+                "@id": "/api/snake_colors/2",
+                "@type": "SnakeColor",
+                "id": 2,
+                "color": "black"
+              }
+          ]
+        }
+        ');
+        return $this->assertResourceIsCreated();
+    }
+
+    /**
+     * ОЖИДАЕМО: изменяем Snake.title, отвязываем SnakeColor=1, привязываем SnakeColor=2
+     *
+     * @depends testCreateSnakeAndTwoSnakeColor
+     * @return int
+     */
+    public function testUpdateSnake1AndRemoveSnakeColor1AndAddSnakeColor2(): int
+    {
+        $this->putLd('/api/snakes/1', '
+        {
+          "title": "cobra1",
+          "snakeColors": [
+            "/api/snake_colors/2"
+          ]
+        }
+        ');
+        $this->assertJsonResponse('
+        {
+          "@context": "/api/contexts/Snake",
+          "@id": "/api/snakes/1",
+          "@type": "Snake",
+          "id": 1,
+          "title": "cobra1",
+          "length": null,
+          "snakeColors": [
+              {
+                "@id": "/api/snake_colors/2",
+                "@type": "SnakeColor",
+                "id": 2,
+                "color": "black"
+              }
+          ]
+        }
+        ');
+        return $this->assertResourceIsUpdated();
+    }
+
+    /**
+     * ОЖИДАЕМО: изменяем Snake.title, отвязываем все SnakeColor`s
+     *
+     * @depends testUpdateSnake1AndRemoveSnakeColor1AndAddSnakeColor2
+     * @return int
+     */
+    public function testUpdateSnake1AndRemoveSnakeColors(): int
+    {
+        $this->putLd('/api/snakes/1', '
+        {
+          "length": 123,
+          "snakeColors": []
+        }
+        ');
+        $this->assertJsonResponse('
+        {
+          "@context": "/api/contexts/Snake",
+          "@id": "/api/snakes/1",
+          "@type": "Snake",
+          "id": 1,
+          "title": "cobra1",
+          "length": 123,
+          "snakeColors": []
+        }
+        ');
+        return $this->assertResourceIsUpdated();
     }
 }

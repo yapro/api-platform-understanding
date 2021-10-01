@@ -7,12 +7,69 @@
 Как изучать:
 * смотреть примеры запросов и ответов в тестах
 * читать пояснения в тестах (особенно по слову "НЕОЖИДАННО")
+* читать дальше данный README.md
 * изучать официальную документацию https://api-platform.com/docs/core/serialization/
+* изучать неофициальную https://symfonycasts.com/screencast/api-platform/collections-create
+* изучать неофициальную https://symfonycasts.com/screencast/api-platform/embedded-write
+* о фильтрации и сортировке https://yapro.ru/article/6044
 
 Важные моменты:
 * если запустить тесты, то можно увидеть, что тесты пройдены, но печатаются какие-то ошибки, это следствие того, что 
   используется Symfony KernelBrowser, подробности в OneItemTest::testDeleteNonExistentBook()
 * нельзя доверять валидацию объектов симфони-валидатору, т.к. он не применяется если объекты наполняются внутри приложения
+
+Работа с коллекциями:
+* чтобы работал метод PUT и PATCH для свойства, которое является коллекцией сущностей, в сущность должны быть 
+  добавлены 2 метода: addPropertyName и removePropertyName (PropertyName это имя свойства класса сущности).
+* чтобы работала очистка, через PUT и PATCH в аннотации к свойству нужно добавить orphanRemoval=true.
+
+## Настройки
+
+Следующая настройка заставляет \ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension использовать 
+sql-join'ы для получения данных всех связанных сущностей, при этом вложенность никак ограничить нельзя (все что связано, 
+все будет вытащено из бд).
+```yaml
+api_platform.eager_loading = true
+```
+Уменьшить вложенность данных в ответе можно только с помощью аннотаций групп симфони-сериализатора. У себя в проекте мы 
+решили не указывать группу нормализации (apiRead) для свойств-отношений (свойств коллекций в сущности) которые имеют 
+очень большую вложенность, т.е. было:
+```injectablephp
+/**
+* @Groups({"apiRead", "apiWrite"})
+*/
+private Collection $products;
+```
+Стало:
+```injectablephp
+/**
+* @Groups({"apiWrite"})
+*/
+private Collection $products;
+```
+Т.е. отношения запрашивать будем из самой коллекции, например: "/api/products" c фильтром по свойству bundle.
+
+Если все-таки потребуется получать сразу коллекцию, то укажем отдельную группу "Company:apiRead" для свойства $products, 
+на необходимую глубину отношений с помощью Symfony\Component\Serializer\Annotation\MaxDepth + enable_max_depth:
+```injectablephp
+/**
+ * @ApiPlatform(normalizationContext={"groups"={"read"}, "enable_max_depth"=true})
+ */
+class Book {
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="books")
+     * @Groups({"read"})
+     * @MaxDepth(1)
+     */
+    private $author;
+}
+```
+Интересные аннотации:
+```injectablephp
+@ApiSubresource(maxDepth=1)
+@ApiProperty(attributes={"fetchEager": false, "fetchable": false})
+@SerializedName("public_field_name")
+```
 
 ## Как запустить тесты или поправить их
 
