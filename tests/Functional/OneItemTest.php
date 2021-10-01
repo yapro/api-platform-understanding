@@ -26,15 +26,14 @@ class OneItemTest extends BaseTestCase
     {
         self::truncateAllTablesInSqLite();
 
-        $json = '
+        $crawler = $this->postLd('/api/books', '
         {
           "isbn": "string",
           "title": "string",
           "publicationDate": "2021-06-27T05:39:19.583Z",
           "nonExistentField": "данное поле будет проигнорировано т.к. не существует в сущности"
         }
-        ';
-        $crawler = $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
+        ');
         $this->assertJsonResponse('
         {
           "@context": "/api/contexts/Book",
@@ -53,6 +52,77 @@ class OneItemTest extends BaseTestCase
 
     /**
      * @depends testCreateBook
+     *
+     * @param int $bookId
+     */
+    public function testCreateExistingIsbn(int $bookId): int
+    {
+        $this->postLd('/api/books', '
+            {
+            "isbn": "string",
+            "title": "string2",
+            "publicationDate": "2021-06-27T05:39:19.583Z",
+            "nonExistentField": "данное поле будет проигнорировано т.к. не существует в сущности"
+            }
+        ');
+        // благодаря аннотации @UniqueEntity(fields={"isbn"}) симфони-валидатор проверяет существование записи в базе, и
+        // останавливает процесс сохранения + добавляет http-заголовок 422:
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        if ($_SERVER['APP_ENV'] === 'prod') {
+            $this->assertJsonResponse('
+            {
+              "@context": "/api/contexts/ConstraintViolationList",
+              "@type": "ConstraintViolationList",
+              "hydra:title": "An error occurred",
+              "hydra:description": "isbn: This value is already used.",
+              "violations": [
+                {
+                  "propertyPath": "isbn",
+                  "message": "This value is already used.",
+                  "code": "23bd9dbf-6b9b-41cd-a99e-4844bcf3077f"
+                }
+              ]
+            }
+            ');
+        }
+        return $bookId;
+    }
+
+    /**
+     * @depends testCreateExistingIsbn
+     *
+     * @param int $bookId
+     */
+    public function testCreateExistingBook(int $bookId): int
+    {
+        $this->postLd('/api/books', '
+        {
+            "isbn": "string2",
+            "title": "string",
+            "publicationDate": "2021-06-27T05:39:19.583Z",
+            "nonExistentField": "данное поле будет проигнорировано т.к. не существует в сущности"
+        }
+        ');
+        $this->assertResponseStatusCodeSame(Response::HTTP_INTERNAL_SERVER_ERROR);
+
+        // НЕОЖИДАННО: ApiPlatform не умеет обрабатывать исключение о наличии уже существующей уникальной записи в базе,
+        // поэтом если попытаться добавить дубль-запись, то возникнет исключение, преобразованное в http-статус 500
+        // Правильно возвращать http-статус 409, это реализовано в https://github.com/yapro/apiration/tree/master/src
+        if ($_SERVER['APP_ENV'] === 'prod') {
+            $this->assertJsonResponse('
+            {
+              "@context": "/api/contexts/Error",
+              "@type": "hydra:Error",
+              "hydra:title": "An error occurred",
+              "hydra:description": "Internal Server Error"
+            }
+            ');
+        }
+        return $bookId;
+    }
+
+    /**
+     * @depends testCreateExistingBook
      *
      * @param int $bookId
      * @return int
@@ -212,14 +282,13 @@ class OneItemTest extends BaseTestCase
      */
     public function testUpdateBook(int $bookId): int
     {
-        $json = '
+        $this->putLd('/api/books/' . $bookId, '
             {
               "isbn": "new string",
               "title": "string",
               "publicationDate": "2022-06-27T05:39:19.583Z"
             }
-            ';
-        $this->putLd('/api/books/' . $bookId, $this->getJsonHelper()->jsonDecode($json, true));
+            ');
         $this->assertJsonResponse('
             {
               "@context": "/api/contexts/Book",
@@ -286,12 +355,7 @@ class OneItemTest extends BaseTestCase
     public function testCreateWithoutRequiredFieldValue(): void
     {
         // title не указан и выбрасывается \Doctrine\DBAL\Exception\NotNullConstraintViolationException
-        $json = '
-            {
-              "isbn": "string"
-            }
-            ';
-        $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
+        $this->postLd('/api/books', '{"isbn": "string3"}');
         $this->assertResponseStatusCodeSame(Response::HTTP_INTERNAL_SERVER_ERROR);
         if ($_SERVER['APP_ENV'] === 'prod') {
             $this->assertJsonResponse('
@@ -324,16 +388,10 @@ class OneItemTest extends BaseTestCase
     {
         self::truncateAllTablesInSqLite();
 
-        $json = '
-        {
-          "title": "string",
-          "publicationDate": "2021-06-27T05:39:19.583Z"
-        }
-        ';
         // ApiPlatform not supporting multi insert
-        $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
-        $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
-        $this->postLd('/api/books', $this->getJsonHelper()->jsonDecode($json, true));
+        $this->postLd('/api/books', '{"title": "string1", "publicationDate": "2021-06-27T05:39:19.583Z"}');
+        $this->postLd('/api/books', '{"title": "string2", "publicationDate": "2021-06-27T05:39:19.583Z"}');
+        $this->postLd('/api/books', '{"title": "string3", "publicationDate": "2021-06-27T05:39:19.583Z"}');
         $this->assertResourceIsCreated();
 
         $this->getLd('/api/books');
@@ -348,7 +406,7 @@ class OneItemTest extends BaseTestCase
               "@id": "/api/books/1",
               "@type": "Book",
               "id": 1,
-              "title": "string",
+              "title": "string1",
               "publicationDate": "2021-06-27T05:39:19+00:00",
               "reviews": []
             },
@@ -356,7 +414,7 @@ class OneItemTest extends BaseTestCase
               "@id": "/api/books/2",
               "@type": "Book",
               "id": 2,
-              "title": "string",
+              "title": "string2",
               "publicationDate": "2021-06-27T05:39:19+00:00",
               "reviews": []
             }
@@ -390,7 +448,7 @@ class OneItemTest extends BaseTestCase
               "@id": "/api/books/2",
               "@type": "Book",
               "id": 2,
-              "title": "string",
+              "title": "string2",
               "publicationDate": "2021-06-27T05:39:19+00:00",
               "reviews": []
             }

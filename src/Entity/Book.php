@@ -7,12 +7,14 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * A book.
  *
  * @ORM\Entity
  * @ApiResource
+ * @UniqueEntity(fields={"isbn"})
  */
 class Book
 {
@@ -35,7 +37,7 @@ class Book
     /**
      * The title of this book.
      *
-     * @ORM\Column
+     * @ORM\Column(type="string", unique=true)
      */
 	public string $title = '';
 
