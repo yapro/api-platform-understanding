@@ -84,12 +84,13 @@ docker build -t yapro/api-platform-understanding:latest -f ./Dockerfile ./
 
 Tests
 ```sh
-docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app \
-  && COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-scripts --no-interaction \
+docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app && \
+  COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-scripts --no-interaction && \
   bin/console doctrine:schema:drop --full-database --force -v && \
   bin/console doctrine:schema:update --force -v && \
-  && vendor/bin/phpunit --testsuite=Functional"
+  bin/phpunit tests/Functional"
 ```
+Если тесты падают, попробуйте выполнить: ln -sf composer.lock.dist composer.lock
 
 Dev
 ```sh

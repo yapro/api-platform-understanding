@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace YaPro\ApiPlatformUnderstanding\Tests\Functional;
 
 use Doctrine\ORM\EntityManagerInterface;
+use YaPro\ApiPlatformUnderstanding\Entity\Snake;
+use YaPro\ApiPlatformUnderstanding\Entity\SnakeColor;
 use YaPro\DoctrineExt\ReloadDatabaseTrait;
 use YaPro\SymfonyHttpClientExt\HttpClientJsonLdExtTrait;
 use YaPro\SymfonyHttpTestExt\BaseTestCase;
@@ -104,7 +106,7 @@ class ManyItemsTest extends BaseTestCase
     }
 
     /**
-     * ОЖИДАЕМО: мы не только создали еще одну Snake, но и отвязали от Snake=1 запись SnakeColor=2, привязав к новой Snake
+     * ОЖИДАЕМО: мы не только создали еще одну Snake, но и отвязали от Snake=1 запись SnakeColor=2, привязав её к новой Snake
      *
      * @depends testCreateSnakeAndTwoSnakeColor
      * @return int
@@ -178,13 +180,52 @@ class ManyItemsTest extends BaseTestCase
     }
 
     /**
-     * ОЖИДАЕМО: изменяем Snake.title, отвязываем все SnakeColor`s
+     * ОЖИДАЕМО: изменяем Snake.length, все остальное не изменяется
      *
      * @depends testUpdateSnake1AndRemoveSnakeColor1AndAddSnakeColor2
-     * @return int
      */
-    public function testUpdateSnake1AndRemoveSnakeColors(): int
+    public function testUpdateSnakeWithoutChangeSnakeColors()
     {
+        $this->putLd('/api/snakes/1', '
+        {
+          "length": 12
+        }
+        ');
+        $this->assertJsonResponse('
+        {
+          "@context": "/api/contexts/Snake",
+          "@id": "/api/snakes/1",
+          "@type": "Snake",
+          "id": 1,
+          "title": "cobra1",
+          "length": 12,
+          "snakeColors": [
+              {
+                "@id": "/api/snake_colors/2",
+                "@type": "SnakeColor",
+                "id": 2,
+                "color": "black"
+              }
+          ]
+        }
+        ');
+        $this->assertResourceIsUpdated();
+    }
+
+    /**
+     * ОЖИДАЕМО: изменяем Snake.title, отвязываем все SnakeColor`s
+     *
+     * @depends testUpdateSnakeWithoutChangeSnakeColors
+     */
+    public function testUpdateSnake1AndRemoveSnakeColors()
+    {
+        /** @var Snake $snake */
+        $snake = self::$entityManager->find(Snake::class, 1);
+        $this->assertEquals(1, $snake->getSnakeColors()->count());
+        /** @var SnakeColor $snakeColor */
+        $snakeColor = $snake->getSnakeColors()->first();
+        self::$entityManager->clear();
+
         $this->putLd('/api/snakes/1', '
         {
           "length": 123,
@@ -202,6 +243,11 @@ class ManyItemsTest extends BaseTestCase
           "snakeColors": []
         }
         ');
-        return $this->assertResourceIsUpdated();
+        $this->assertResourceIsUpdated();
+
+        /** @var Snake $snake */
+        $snakeColorFromDb = self::$entityManager->find(SnakeColor::class, $snakeColor->getId());
+        $this->assertTrue($snakeColorFromDb instanceof SnakeColor);
+        // итог: ранее привязанные SnakeColor`s не удаляются из бд, а отвязываются от Snake
     }
 }
