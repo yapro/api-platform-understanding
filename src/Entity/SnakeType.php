@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  */
-class SnakeColor
+class SnakeType
 {
     /**
      * @ORM\Id
@@ -32,10 +32,10 @@ class SnakeColor
      * @ORM\Column(type="text")
      * @Groups({"apiRead", "apiWrite"})
      */
-    private string $color = '';
+    private string $typeName = '';
 
     /**
-     * @ORM\ManyToOne(targetEntity="Snake", inversedBy="snakeColors")
+     * @ORM\ManyToOne(targetEntity="Snake", inversedBy="snakeTypes")
      * @ORM\JoinColumn(nullable=true, onDelete="RESTRICT")
      */
     private ?Snake $snake = null;
@@ -45,22 +45,22 @@ class SnakeColor
         return $this->id;
     }
 
-    public function getColor(): string
+    public function getTypeName(): string
     {
-        return $this->color;
+        return $this->typeName;
     }
 
     public function setSnake(?Snake $snake, bool $updateRelation = true): void
     {
         $this->snake = $snake;
         if ($snake && $updateRelation) {
-            $snake->addSnakeColor($this, false);
+            $snake->addSnakeType($this, false);
         }
     }
 
-    public function setColor(string $color): SnakeColor
+    public function setTypeName(string $typeName): SnakeType
     {
-        $this->color = $color;
+        $this->typeName = $typeName;
         return $this;
     }
 }

@@ -51,7 +51,7 @@ class Book
     /**
      * @var Review[]|Collection Available reviews for this book.
      *
-     * @ORM\OneToMany(targetEntity="Review", mappedBy="book", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Review", mappedBy="book", cascade={"persist"})
      */
 	public iterable $reviews;
 

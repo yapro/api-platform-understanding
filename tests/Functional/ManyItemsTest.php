@@ -99,7 +99,8 @@ class ManyItemsTest extends BaseTestCase
                 "id": 2,
                 "color": "black"
               }
-          ]
+          ],
+          "snakeTypes":[]
         }
         ');
         return $this->assertResourceIsCreated();
@@ -136,7 +137,8 @@ class ManyItemsTest extends BaseTestCase
                 "id": 2,
                 "color": "black"
               }
-          ]
+          ],
+          "snakeTypes":[]
         }
         ');
         return $this->assertResourceIsCreated();
@@ -173,7 +175,8 @@ class ManyItemsTest extends BaseTestCase
                 "id": 2,
                 "color": "black"
               }
-          ]
+          ],
+          "snakeTypes":[]
         }
         ');
         return $this->assertResourceIsUpdated();
@@ -206,7 +209,8 @@ class ManyItemsTest extends BaseTestCase
                 "id": 2,
                 "color": "black"
               }
-          ]
+          ],
+          "snakeTypes":[]
         }
         ');
         $this->assertResourceIsUpdated();
@@ -240,14 +244,86 @@ class ManyItemsTest extends BaseTestCase
           "id": 1,
           "title": "cobra1",
           "length": 123,
-          "snakeColors": []
+          "snakeColors": [],
+          "snakeTypes":[]
         }
         ');
         $this->assertResourceIsUpdated();
 
+        self::$entityManager->clear();
         /** @var Snake $snake */
         $snakeColorFromDb = self::$entityManager->find(SnakeColor::class, $snakeColor->getId());
         $this->assertTrue($snakeColorFromDb instanceof SnakeColor);
         // итог: ранее привязанные SnakeColor`s не удаляются из бд, а отвязываются от Snake
+    }
+
+
+    /**
+     * /var/www/bb/premiumbonus-ecom/source/main/tests/Integration/DataResource/UserResourceTest.php
+     *
+     *
+     *
+     * @depends testUpdateSnake1AndRemoveSnakeColors
+     */
+    public function testCreateSnakeWithExistingSnakeColorAndNewSnakeType()
+    {
+        // создаем одним запросом Parent + привязываем Kid + создаем Kid
+        $this->postLd('/api/snakes', '
+        {
+          "title": "grass-snake",
+          "snakeColors": [
+            "/api/snake_colors/2"
+          ],
+          "snakeTypes": [
+            {"typeName": "nonpoisonous"}
+          ]
+        }
+        ');
+        self::assertResourceIsCreated();
+        $this->assertJsonResponse('
+        {
+          "@context": "/api/contexts/Snake",
+          "@id": "/api/snakes/3",
+          "@type": "Snake",
+          "id": 3,
+          "title": "grass-snake",
+          "length": null,
+          "snakeColors": [
+              {
+                "@id": "/api/snake_colors/2",
+                "@type": "SnakeColor",
+                "id": 2,
+                "color": "black"
+              }
+          ],
+          "snakeTypes": [
+              {
+                "@id": "/api/snake_types/1",
+                "@type": "SnakeType",
+                "id": 1,
+                "typeName": "nonpoisonous"
+              }
+          ]
+        }
+        ');
+
+        // создаем пользователя + привязываем пользователя к выше созданной организации
+//+        $username = 'two@mail.com';
+//+        $password = 'any string';
+//+        $this->requestJsonLd('POST', '/api/customer_organization_relations', [
+//+            'customer' => [
+//+                'email' => $username,
+//+                'password' => $password,
+//+            ],
+//+            'organization' => [
+//+                '@id' => '/api/organizations/' . $organizationId,
+//+            ],
+//+        ]);
+//+        self::assertResourceIsCreated();
+//+        $customerId = self::$responseAsArray['customer']['id'];
+//+
+//+        $this->logIn($username, $password, $customerId);
+//+
+//+        return $customerId;
     }
 }

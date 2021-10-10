@@ -47,15 +47,25 @@ class Snake
     /**
      * @var SnakeColor[]|Collection
      *
-     * @ORM\OneToMany(targetEntity="SnakeColor", mappedBy="snake", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="SnakeColor", mappedBy="snake", cascade={"persist"})
      * @ApiSubresource
      * @Groups({"apiRead", "apiWrite"})
      */
 	private iterable $snakeColors;
 
+    /**
+     * @var SnakeType[]|Collection
+     *
+     * @ORM\OneToMany(targetEntity="SnakeType", mappedBy="snake", cascade={"persist"})
+     * @ApiSubresource
+     * @Groups({"apiRead", "apiWrite"})
+     */
+    private iterable $snakeTypes;
+
 	public function __construct()
 	{
 		$this->snakeColors = new ArrayCollection();
+        $this->snakeTypes = new ArrayCollection();
 	}
 
     public function getTitle(): string
@@ -98,6 +108,33 @@ class Snake
         $this->snakeColors->removeElement($snakeColor);
         if ($updateRelation) {
             $snakeColor->setSnake(null, false);
+        }
+    }
+
+    /**
+     * @return Collection|SnakeType[]
+     */
+    public function getSnakeTypes()
+    {
+        return $this->snakeTypes;
+    }
+
+    public function addSnakeType(SnakeType $snakeType, bool $updateRelation = true): void
+    {
+        if ($this->snakeTypes->contains($snakeType)) {
+            return;
+        }
+        $this->snakeTypes->add($snakeType);
+        if ($updateRelation) {
+            $snakeType->setSnake($this, false);
+        }
+    }
+
+    public function removeSnakeType(SnakeType $snakeType, bool $updateRelation = true): void
+    {
+        $this->snakeTypes->removeElement($snakeType);
+        if ($updateRelation) {
+            $snakeType->setSnake(null, false);
         }
     }
 }
