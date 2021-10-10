@@ -267,12 +267,16 @@ class ManyItemsTest extends BaseTestCase
      */
     public function testCreateSnakeWithExistingSnakeColorAndNewSnakeType()
     {
-        // создаем одним запросом Parent + привязываем Kid + создаем Kid
+        // создаем одним запросом Parent + привязываем Kid (и изменяем ей данные) + создаем Kid
         $this->postLd('/api/snakes', '
         {
           "title": "grass-snake",
           "snakeColors": [
-            "/api/snake_colors/2"
+              {
+                "@id": "/api/snake_colors/2",
+                "id": 2,
+                "color": "green"
+              }
           ],
           "snakeTypes": [
             {"typeName": "nonpoisonous"}
@@ -293,7 +297,7 @@ class ManyItemsTest extends BaseTestCase
                 "@id": "/api/snake_colors/2",
                 "@type": "SnakeColor",
                 "id": 2,
-                "color": "black"
+                "color": "green"
               }
           ],
           "snakeTypes": [
@@ -306,24 +310,5 @@ class ManyItemsTest extends BaseTestCase
           ]
         }
         ');
-
-        // создаем пользователя + привязываем пользователя к выше созданной организации
-//+        $username = 'two@mail.com';
-//+        $password = 'any string';
-//+        $this->requestJsonLd('POST', '/api/customer_organization_relations', [
-//+            'customer' => [
-//+                'email' => $username,
-//+                'password' => $password,
-//+            ],
-//+            'organization' => [
-//+                '@id' => '/api/organizations/' . $organizationId,
-//+            ],
-//+        ]);
-//+        self::assertResourceIsCreated();
-//+        $customerId = self::$responseAsArray['customer']['id'];
-//+
-//+        $this->logIn($username, $password, $customerId);
-//+
-//+        return $customerId;
     }
 }
