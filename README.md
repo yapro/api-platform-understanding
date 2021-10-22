@@ -77,12 +77,14 @@ class Book {
 зависимостей текущие тесты успешно проходят, но Вы можете запускать их на основании своего composer.lock файла, это
 позволит выявлять расхождения в версиях библиотеки ApiPlatform.
 
-Build
+### Build
+
 ```sh
 docker build -t yapro/api-platform-understanding:latest -f ./Dockerfile ./
 ```
 
-Tests
+### Tests
+
 ```sh
 docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app && \
   COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-scripts --no-interaction && \
@@ -92,7 +94,21 @@ docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding
 ```
 Если тесты падают, попробуйте выполнить: ln -sf composer.lock.dist composer.lock
 
-Dev
+### Tests OAS
+
+```sh
+docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app && \
+  COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-scripts --no-interaction && \
+  bin/console doctrine:schema:drop --full-database --force -v && \
+  bin/console doctrine:schema:update --force -v && \
+  bin/diff-openapi.sh"
+```
+Текущую схему находится по адресу public/oas/api-platform.yaml Ее можно открыть в редакторе https://editor.swagger.io/
+
+А еще можно выполнить команду ниже и смотреть по адресу: http://127.0.0.1:8000/api
+
+### Dev
+
 ```sh
 docker run -it --rm --user=1000:1000 --net=host -v $(pwd):/app -w /app yapro/api-platform-understanding:latest bash
 COMPOSER_MEMORY_LIMIT=-1 composer install -o && \
@@ -100,8 +116,11 @@ bin/console doctrine:schema:drop --full-database --force -v && \
 bin/console doctrine:schema:update --force -v && \
 php -S 127.0.0.1:8000 -t public
 ```
+Можно заходить по адресу: http://127.0.0.1:8000/api
 
-Debug PHP:
+### Debug PHP:
+
+В phpunit.xml.dist поменяйте APP_ENV на test и запустите:
 ```sh
 docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app && \
   COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-scripts --no-interaction && \
@@ -111,7 +130,7 @@ docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding
   XDEBUG_SESSION=common \
   XDEBUG_MODE=debug \
   XDEBUG_CONFIG=\"max_nesting_level=200 client_port=9003 client_host=172.16.30.130\" \
-  vendor/bin/phpunit --cache-result-file=/tmp/phpunit.cache tests/Functional"
+  bin/phpunit --cache-result-file=/tmp/phpunit.cache tests/Functional"
 ```
 Если с xdebug что-то не получается, напишите: php -dxdebug.log='/tmp/xdebug.log' и смотрите в лог.
 

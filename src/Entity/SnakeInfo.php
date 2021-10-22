@@ -8,19 +8,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Создан с целью проверить работу сразу двух OneToMany отношений
+ * Создан с целью проверить работу OneToOne отношения
  *
  * @ORM\Entity
  * @ApiResource(
  *     normalizationContext={
- *         "groups": {"apiRead"}
+ *         "groups": {"apiRead"},
+ *         "skip_null_values" = false
  *     },
  *     denormalizationContext={
  *         "groups": {"apiWrite"}
  *     }
  * )
  */
-class SnakeType
+class SnakeInfo
 {
     /**
      * @ORM\Id
@@ -28,41 +29,45 @@ class SnakeType
      * @ORM\Column(type="integer")
      * @Groups({"apiRead", "apiWrite"})
      */
-    private ?int $id = null;
+    public ?int $id = null;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="integer")
      * @Groups({"apiRead", "apiWrite"})
      */
-    private string $typeName = '';
+    public int $averageLength = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Snake", inversedBy="snakeTypes")
-     * @ORM\JoinColumn(nullable=true, onDelete="RESTRICT")
+     * @ORM\OneToOne(targetEntity="Snake", inversedBy="snakeInfo")
      */
-    private ?Snake $snake = null;
+    private ?Snake $snake;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTypeName(): string
+    public function getSnake(): ?Snake
     {
-        return $this->typeName;
+        return $this->snake;
     }
 
     public function setSnake(?Snake $snake, bool $updateRelation = true): void
     {
         $this->snake = $snake;
         if ($snake && $updateRelation) {
-            $snake->addSnakeType($this, false);
+            $snake->setSnakeInfo($this, false);
         }
     }
 
-    public function setTypeName(string $typeName): SnakeType
+    public function getAverageLength(): int
     {
-        $this->typeName = $typeName;
+        return $this->averageLength;
+    }
+
+    public function setAverageLength(int $averageLength): self
+    {
+        $this->averageLength = $averageLength;
         return $this;
     }
 }

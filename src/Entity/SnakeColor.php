@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * Создан с целью проверить работу OneToMany отношения
+ *
  * @ORM\Entity
  * @ApiResource(
  *     normalizationContext={

@@ -45,6 +45,12 @@ class Snake
     public ?int $length = null;
 
     /**
+     * @ORM\OneToOne(targetEntity="SnakeInfo", mappedBy="snake", cascade={"persist"})
+     * @Groups({"apiRead", "apiWrite"})
+     */
+    private ?SnakeInfo $snakeInfo = null;
+
+    /**
      * @var SnakeColor[]|Collection
      *
      * @ORM\OneToMany(targetEntity="SnakeColor", mappedBy="snake", cascade={"persist"})
@@ -82,6 +88,21 @@ class Snake
     public function getLength(): ?int
     {
         return $this->length;
+    }
+
+    // без гетера не ApiPlatform не отдает property snakeInfo
+    public function getSnakeInfo(): ?SnakeInfo
+    {
+        return $this->snakeInfo;
+    }
+
+    //
+    public function setSnakeInfo(?SnakeInfo $snakeInfo, bool $updateRelation = true): void
+    {
+        $this->snakeInfo = $snakeInfo;
+        if ($snakeInfo && $updateRelation) {
+            $snakeInfo->setSnake($this, false);
+        }
     }
 
     /**

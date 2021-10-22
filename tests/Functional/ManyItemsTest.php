@@ -86,6 +86,7 @@ class ManyItemsTest extends BaseTestCase
           "id": 1,
           "title": "cobra",
           "length": null,
+          "snakeInfo": null,
           "snakeColors": [
               {
                 "@id": "/api/snake_colors/1",
@@ -130,6 +131,7 @@ class ManyItemsTest extends BaseTestCase
           "id": 2,
           "title": "cobra2",
           "length": null,
+          "snakeInfo": null,
           "snakeColors": [
               {
                 "@id": "/api/snake_colors/2",
@@ -168,6 +170,7 @@ class ManyItemsTest extends BaseTestCase
           "id": 1,
           "title": "cobra1",
           "length": null,
+          "snakeInfo": null,
           "snakeColors": [
               {
                 "@id": "/api/snake_colors/2",
@@ -202,6 +205,7 @@ class ManyItemsTest extends BaseTestCase
           "id": 1,
           "title": "cobra1",
           "length": 12,
+          "snakeInfo":null,
           "snakeColors": [
               {
                 "@id": "/api/snake_colors/2",
@@ -244,6 +248,7 @@ class ManyItemsTest extends BaseTestCase
           "id": 1,
           "title": "cobra1",
           "length": 123,
+          "snakeInfo":null,
           "snakeColors": [],
           "snakeTypes":[]
         }
@@ -259,10 +264,6 @@ class ManyItemsTest extends BaseTestCase
 
 
     /**
-     * /var/www/bb/premiumbonus-ecom/source/main/tests/Integration/DataResource/UserResourceTest.php
-     *
-     *
-     *
      * @depends testUpdateSnake1AndRemoveSnakeColors
      */
     public function testCreateSnakeWithExistingSnakeColorAndNewSnakeType()
@@ -292,6 +293,7 @@ class ManyItemsTest extends BaseTestCase
           "id": 3,
           "title": "grass-snake",
           "length": null,
+          "snakeInfo":null,
           "snakeColors": [
               {
                 "@id": "/api/snake_colors/2",
@@ -310,5 +312,69 @@ class ManyItemsTest extends BaseTestCase
           ]
         }
         ');
+    }
+
+    // НЕОЖИДАННО: чтобы в объекте snakeInfo появилась ссылка на "snake": "/api/snakes/1" нужно для SnakeInfo.snake
+    // прописать @Groups({"apiRead", "apiWrite"})
+    public function testCreateSnakeAndSnakeInfo(): int
+    {
+        $this->postLd('/api/snakes', '
+        {
+          "title": "cobra",
+          "snakeInfo": {"averageLength": 123}
+        }
+        ');
+
+        $this->assertJsonResponse('
+        {
+          "@context": "/api/contexts/Snake",
+          "@id": "/api/snakes/4",
+          "@type": "Snake",
+          "id": 4,
+          "title": "cobra",
+          "length": null,
+          "snakeInfo": {
+              "@id": "/api/snake_infos/1",
+              "@type": "SnakeInfo",
+              "id": 1,
+              "averageLength": 123
+          },
+          "snakeColors": [],
+          "snakeTypes":[]
+        }
+        ');
+        return $this->assertResourceIsCreated();
+    }
+    public function testUpdateSnakeAndSnakeInfo(): int
+    {
+        $this->putLd('/api/snakes/4', '
+        {
+          "title": "cobra1",
+          "snakeInfo": {
+             "@id": "/api/snake_infos/1",
+             "averageLength": 12345
+          }
+        }
+        ');
+        $this->assertJsonResponse('
+        {
+          "@context": "/api/contexts/Snake",
+          "@id": "/api/snakes/4",
+          "@type": "Snake",
+          "id": 4,
+          "title": "cobra1",
+          "length": null,
+          "snakeInfo": null,
+          "snakeInfo": {
+              "@id": "/api/snake_infos/1",
+              "@type": "SnakeInfo",
+              "id": 1,
+              "averageLength": 12345
+          },
+          "snakeColors": [],
+          "snakeTypes":[]
+        }
+        ');
+        return $this->assertResourceIsUpdated();
     }
 }

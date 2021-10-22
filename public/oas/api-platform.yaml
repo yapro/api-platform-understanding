@@ -1,0 +1,2494 @@
+openapi: 3.0.3
+info:
+  title: ''
+  description: ''
+  version: 0.0.0
+servers:
+  -
+    url: /
+    description: ''
+paths:
+  /api/books:
+    get:
+      operationId: getBookCollection
+      tags:
+        - Book
+      responses:
+        200:
+          description: 'Book collection'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Book.jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+      summary: 'Retrieves the collection of Book resources.'
+      description: 'Retrieves the collection of Book resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: itemsPerPage
+          in: query
+          description: 'The number of items per page'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 2
+            minimum: 0
+            maximum: 100
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: pagination
+          in: query
+          description: 'Enable or disable pagination'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+      deprecated: false
+    post:
+      operationId: postBookCollection
+      tags:
+        - Book
+      responses:
+        201:
+          description: 'Book resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Book.jsonld'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Book'
+          links:
+            GetBookItem:
+              operationId: getBookItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/books/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a Book resource.'
+      description: 'Creates a Book resource.'
+      parameters: []
+      requestBody:
+        description: 'The new Book resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Book.jsonld'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      deprecated: false
+    parameters: []
+  '/api/books/{id}':
+    get:
+      operationId: getBookItem
+      tags:
+        - Book
+      responses:
+        200:
+          description: 'Book resource'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Book.jsonld'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Book'
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a Book resource.'
+      description: 'Retrieves a Book resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    put:
+      operationId: putBookItem
+      tags:
+        - Book
+      responses:
+        200:
+          description: 'Book resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Book.jsonld'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Book'
+          links:
+            GetBookItem:
+              operationId: getBookItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/books/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Replaces the Book resource.'
+      description: 'Replaces the Book resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated Book resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Book.jsonld'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      deprecated: false
+    delete:
+      operationId: deleteBookItem
+      tags:
+        - Book
+      responses:
+        204:
+          description: 'Book resource deleted'
+        404:
+          description: 'Resource not found'
+      summary: 'Removes the Book resource.'
+      description: 'Removes the Book resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    patch:
+      operationId: patchBookItem
+      tags:
+        - Book
+      responses:
+        200:
+          description: 'Book resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Book.jsonld'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Book'
+          links:
+            GetBookItem:
+              operationId: getBookItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/books/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Updates the Book resource.'
+      description: 'Updates the Book resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated Book resource'
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      deprecated: false
+    parameters: []
+  /api/reviews:
+    get:
+      operationId: getReviewCollection
+      tags:
+        - Review
+      responses:
+        200:
+          description: 'Review collection'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Review.jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+      summary: 'Retrieves the collection of Review resources.'
+      description: 'Retrieves the collection of Review resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: itemsPerPage
+          in: query
+          description: 'The number of items per page'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 2
+            minimum: 0
+            maximum: 100
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: pagination
+          in: query
+          description: 'Enable or disable pagination'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+      deprecated: false
+    post:
+      operationId: postReviewCollection
+      tags:
+        - Review
+      responses:
+        201:
+          description: 'Review resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Review.jsonld'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Review'
+          links:
+            GetReviewItem:
+              operationId: getReviewItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/reviews/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a Review resource.'
+      description: 'Creates a Review resource.'
+      parameters: []
+      requestBody:
+        description: 'The new Review resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Review.jsonld'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Review'
+        required: true
+      deprecated: false
+    parameters: []
+  '/api/reviews/{id}':
+    get:
+      operationId: getReviewItem
+      tags:
+        - Review
+      responses:
+        200:
+          description: 'Review resource'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Review.jsonld'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Review'
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a Review resource.'
+      description: 'Retrieves a Review resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    put:
+      operationId: putReviewItem
+      tags:
+        - Review
+      responses:
+        200:
+          description: 'Review resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Review.jsonld'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Review'
+          links:
+            GetReviewItem:
+              operationId: getReviewItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/reviews/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Replaces the Review resource.'
+      description: 'Replaces the Review resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated Review resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Review.jsonld'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Review'
+        required: true
+      deprecated: false
+    delete:
+      operationId: deleteReviewItem
+      tags:
+        - Review
+      responses:
+        204:
+          description: 'Review resource deleted'
+        404:
+          description: 'Resource not found'
+      summary: 'Removes the Review resource.'
+      description: 'Removes the Review resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    patch:
+      operationId: patchReviewItem
+      tags:
+        - Review
+      responses:
+        200:
+          description: 'Review resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Review.jsonld'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Review'
+          links:
+            GetReviewItem:
+              operationId: getReviewItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/reviews/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Updates the Review resource.'
+      description: 'Updates the Review resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated Review resource'
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/Review'
+        required: true
+      deprecated: false
+    parameters: []
+  /api/snake_colors:
+    get:
+      operationId: getSnakeColorCollection
+      tags:
+        - SnakeColor
+      responses:
+        200:
+          description: 'SnakeColor collection'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/SnakeColor.jsonld-apiRead' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeColor-apiRead'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeColor-apiRead'
+      summary: 'Retrieves the collection of SnakeColor resources.'
+      description: 'Retrieves the collection of SnakeColor resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: itemsPerPage
+          in: query
+          description: 'The number of items per page'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 2
+            minimum: 0
+            maximum: 100
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: pagination
+          in: query
+          description: 'Enable or disable pagination'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+      deprecated: false
+    post:
+      operationId: postSnakeColorCollection
+      tags:
+        - SnakeColor
+      responses:
+        201:
+          description: 'SnakeColor resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeColor.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeColor-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeColor-apiRead'
+          links:
+            GetSnakeColorItem:
+              operationId: getSnakeColorItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_colors/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a SnakeColor resource.'
+      description: 'Creates a SnakeColor resource.'
+      parameters: []
+      requestBody:
+        description: 'The new SnakeColor resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/SnakeColor.jsonld-apiWrite'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnakeColor-apiWrite'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/SnakeColor-apiWrite'
+        required: true
+      deprecated: false
+    parameters: []
+  '/api/snake_colors/{id}':
+    get:
+      operationId: getSnakeColorItem
+      tags:
+        - SnakeColor
+      responses:
+        200:
+          description: 'SnakeColor resource'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeColor.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeColor-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeColor-apiRead'
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a SnakeColor resource.'
+      description: 'Retrieves a SnakeColor resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    put:
+      operationId: putSnakeColorItem
+      tags:
+        - SnakeColor
+      responses:
+        200:
+          description: 'SnakeColor resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeColor.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeColor-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeColor-apiRead'
+          links:
+            GetSnakeColorItem:
+              operationId: getSnakeColorItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_colors/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Replaces the SnakeColor resource.'
+      description: 'Replaces the SnakeColor resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated SnakeColor resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/SnakeColor.jsonld-apiWrite'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnakeColor-apiWrite'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/SnakeColor-apiWrite'
+        required: true
+      deprecated: false
+    delete:
+      operationId: deleteSnakeColorItem
+      tags:
+        - SnakeColor
+      responses:
+        204:
+          description: 'SnakeColor resource deleted'
+        404:
+          description: 'Resource not found'
+      summary: 'Removes the SnakeColor resource.'
+      description: 'Removes the SnakeColor resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    patch:
+      operationId: patchSnakeColorItem
+      tags:
+        - SnakeColor
+      responses:
+        200:
+          description: 'SnakeColor resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeColor.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeColor-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeColor-apiRead'
+          links:
+            GetSnakeColorItem:
+              operationId: getSnakeColorItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_colors/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Updates the SnakeColor resource.'
+      description: 'Updates the SnakeColor resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated SnakeColor resource'
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/SnakeColor-apiWrite'
+        required: true
+      deprecated: false
+    parameters: []
+  /api/snake_infos:
+    get:
+      operationId: getSnakeInfoCollection
+      tags:
+        - SnakeInfo
+      responses:
+        200:
+          description: 'SnakeInfo collection'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/SnakeInfo.jsonld-apiRead' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeInfo-apiRead'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeInfo-apiRead'
+      summary: 'Retrieves the collection of SnakeInfo resources.'
+      description: 'Retrieves the collection of SnakeInfo resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: itemsPerPage
+          in: query
+          description: 'The number of items per page'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 2
+            minimum: 0
+            maximum: 100
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: pagination
+          in: query
+          description: 'Enable or disable pagination'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+      deprecated: false
+    post:
+      operationId: postSnakeInfoCollection
+      tags:
+        - SnakeInfo
+      responses:
+        201:
+          description: 'SnakeInfo resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo-apiRead'
+          links:
+            GetSnakeInfoItem:
+              operationId: getSnakeInfoItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_infos/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a SnakeInfo resource.'
+      description: 'Creates a SnakeInfo resource.'
+      parameters: []
+      requestBody:
+        description: 'The new SnakeInfo resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/SnakeInfo.jsonld-apiWrite'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnakeInfo-apiWrite'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/SnakeInfo-apiWrite'
+        required: true
+      deprecated: false
+    parameters: []
+  '/api/snake_infos/{id}':
+    get:
+      operationId: getSnakeInfoItem
+      tags:
+        - SnakeInfo
+      responses:
+        200:
+          description: 'SnakeInfo resource'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo-apiRead'
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a SnakeInfo resource.'
+      description: 'Retrieves a SnakeInfo resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    put:
+      operationId: putSnakeInfoItem
+      tags:
+        - SnakeInfo
+      responses:
+        200:
+          description: 'SnakeInfo resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo-apiRead'
+          links:
+            GetSnakeInfoItem:
+              operationId: getSnakeInfoItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_infos/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Replaces the SnakeInfo resource.'
+      description: 'Replaces the SnakeInfo resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated SnakeInfo resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/SnakeInfo.jsonld-apiWrite'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnakeInfo-apiWrite'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/SnakeInfo-apiWrite'
+        required: true
+      deprecated: false
+    delete:
+      operationId: deleteSnakeInfoItem
+      tags:
+        - SnakeInfo
+      responses:
+        204:
+          description: 'SnakeInfo resource deleted'
+        404:
+          description: 'Resource not found'
+      summary: 'Removes the SnakeInfo resource.'
+      description: 'Removes the SnakeInfo resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    patch:
+      operationId: patchSnakeInfoItem
+      tags:
+        - SnakeInfo
+      responses:
+        200:
+          description: 'SnakeInfo resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeInfo-apiRead'
+          links:
+            GetSnakeInfoItem:
+              operationId: getSnakeInfoItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_infos/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Updates the SnakeInfo resource.'
+      description: 'Updates the SnakeInfo resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated SnakeInfo resource'
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/SnakeInfo-apiWrite'
+        required: true
+      deprecated: false
+    parameters: []
+  /api/snake_types:
+    get:
+      operationId: getSnakeTypeCollection
+      tags:
+        - SnakeType
+      responses:
+        200:
+          description: 'SnakeType collection'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/SnakeType.jsonld-apiRead' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeType-apiRead'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeType-apiRead'
+      summary: 'Retrieves the collection of SnakeType resources.'
+      description: 'Retrieves the collection of SnakeType resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: itemsPerPage
+          in: query
+          description: 'The number of items per page'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 2
+            minimum: 0
+            maximum: 100
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: pagination
+          in: query
+          description: 'Enable or disable pagination'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+      deprecated: false
+    post:
+      operationId: postSnakeTypeCollection
+      tags:
+        - SnakeType
+      responses:
+        201:
+          description: 'SnakeType resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeType.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeType-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeType-apiRead'
+          links:
+            GetSnakeTypeItem:
+              operationId: getSnakeTypeItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_types/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a SnakeType resource.'
+      description: 'Creates a SnakeType resource.'
+      parameters: []
+      requestBody:
+        description: 'The new SnakeType resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/SnakeType.jsonld-apiWrite'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnakeType-apiWrite'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/SnakeType-apiWrite'
+        required: true
+      deprecated: false
+    parameters: []
+  '/api/snake_types/{id}':
+    get:
+      operationId: getSnakeTypeItem
+      tags:
+        - SnakeType
+      responses:
+        200:
+          description: 'SnakeType resource'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeType.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeType-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeType-apiRead'
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a SnakeType resource.'
+      description: 'Retrieves a SnakeType resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    put:
+      operationId: putSnakeTypeItem
+      tags:
+        - SnakeType
+      responses:
+        200:
+          description: 'SnakeType resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeType.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeType-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeType-apiRead'
+          links:
+            GetSnakeTypeItem:
+              operationId: getSnakeTypeItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_types/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Replaces the SnakeType resource.'
+      description: 'Replaces the SnakeType resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated SnakeType resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/SnakeType.jsonld-apiWrite'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnakeType-apiWrite'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/SnakeType-apiWrite'
+        required: true
+      deprecated: false
+    delete:
+      operationId: deleteSnakeTypeItem
+      tags:
+        - SnakeType
+      responses:
+        204:
+          description: 'SnakeType resource deleted'
+        404:
+          description: 'Resource not found'
+      summary: 'Removes the SnakeType resource.'
+      description: 'Removes the SnakeType resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    patch:
+      operationId: patchSnakeTypeItem
+      tags:
+        - SnakeType
+      responses:
+        200:
+          description: 'SnakeType resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeType.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeType-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeType-apiRead'
+          links:
+            GetSnakeTypeItem:
+              operationId: getSnakeTypeItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_types/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Updates the SnakeType resource.'
+      description: 'Updates the SnakeType resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated SnakeType resource'
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/SnakeType-apiWrite'
+        required: true
+      deprecated: false
+    parameters: []
+  /api/snakes:
+    get:
+      operationId: getSnakeCollection
+      tags:
+        - Snake
+      responses:
+        200:
+          description: 'Snake collection'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Snake.jsonld-apiRead' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Snake-apiRead'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Snake-apiRead'
+      summary: 'Retrieves the collection of Snake resources.'
+      description: 'Retrieves the collection of Snake resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: itemsPerPage
+          in: query
+          description: 'The number of items per page'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 2
+            minimum: 0
+            maximum: 100
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: pagination
+          in: query
+          description: 'Enable or disable pagination'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+      deprecated: false
+    post:
+      operationId: postSnakeCollection
+      tags:
+        - Snake
+      responses:
+        201:
+          description: 'Snake resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Snake.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snake-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Snake-apiRead'
+          links:
+            GetSnakeItem:
+              operationId: getSnakeItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snakes/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a Snake resource.'
+      description: 'Creates a Snake resource.'
+      parameters: []
+      requestBody:
+        description: 'The new Snake resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Snake.jsonld-apiWrite'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Snake-apiWrite'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Snake-apiWrite'
+        required: true
+      deprecated: false
+    parameters: []
+  '/api/snakes/{id}':
+    get:
+      operationId: getSnakeItem
+      tags:
+        - Snake
+      responses:
+        200:
+          description: 'Snake resource'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Snake.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snake-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Snake-apiRead'
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a Snake resource.'
+      description: 'Retrieves a Snake resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    put:
+      operationId: putSnakeItem
+      tags:
+        - Snake
+      responses:
+        200:
+          description: 'Snake resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Snake.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snake-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Snake-apiRead'
+          links:
+            GetSnakeItem:
+              operationId: getSnakeItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snakes/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Replaces the Snake resource.'
+      description: 'Replaces the Snake resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated Snake resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Snake.jsonld-apiWrite'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Snake-apiWrite'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Snake-apiWrite'
+        required: true
+      deprecated: false
+    delete:
+      operationId: deleteSnakeItem
+      tags:
+        - Snake
+      responses:
+        204:
+          description: 'Snake resource deleted'
+        404:
+          description: 'Resource not found'
+      summary: 'Removes the Snake resource.'
+      description: 'Removes the Snake resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    patch:
+      operationId: patchSnakeItem
+      tags:
+        - Snake
+      responses:
+        200:
+          description: 'Snake resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Snake.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snake-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Snake-apiRead'
+          links:
+            GetSnakeItem:
+              operationId: getSnakeItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snakes/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Updates the Snake resource.'
+      description: 'Updates the Snake resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated Snake resource'
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/Snake-apiWrite'
+        required: true
+      deprecated: false
+    parameters: []
+  '/api/snakes/{id}/snake_colors':
+    get:
+      operationId: api_snakes_snake_colors_get_subresourceSnakeSubresource
+      tags:
+        - SnakeColor
+        - Snake
+      responses:
+        200:
+          description: 'Snake resource'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/SnakeColor.jsonld-apiRead' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeColor-apiRead'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeColor-apiRead'
+      summary: 'Retrieves a Snake resource.'
+      description: 'Retrieves a Snake resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Snake identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: itemsPerPage
+          in: query
+          description: 'The number of items per page'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 2
+            minimum: 0
+            maximum: 100
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: pagination
+          in: query
+          description: 'Enable or disable pagination'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+      deprecated: false
+    parameters: []
+  '/api/snakes/{id}/snake_types':
+    get:
+      operationId: api_snakes_snake_types_get_subresourceSnakeSubresource
+      tags:
+        - SnakeType
+        - Snake
+      responses:
+        200:
+          description: 'Snake resource'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/SnakeType.jsonld-apiRead' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeType-apiRead'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeType-apiRead'
+      summary: 'Retrieves a Snake resource.'
+      description: 'Retrieves a Snake resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Snake identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: itemsPerPage
+          in: query
+          description: 'The number of items per page'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 2
+            minimum: 0
+            maximum: 100
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: pagination
+          in: query
+          description: 'Enable or disable pagination'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+      deprecated: false
+    parameters: []
+components:
+  schemas:
+    Book:
+      type: object
+      description: 'A book.'
+      properties:
+        id:
+          readOnly: true
+          description: 'The id of this book.'
+          type: integer
+        isbn:
+          description: 'The ISBN of this book (or null if doesn''t have one).'
+          type: string
+          nullable: true
+        title:
+          description: 'The title of this book.'
+          type: string
+        publicationDate:
+          description: 'The publication date of this book.'
+          type: string
+          format: date-time
+        reviews:
+          description: 'Available reviews for this book.'
+          type: array
+          items:
+            type: string
+            format: iri-reference
+    Book.jsonld:
+      type: object
+      description: 'A book.'
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          description: 'The id of this book.'
+          type: integer
+        isbn:
+          description: 'The ISBN of this book (or null if doesn''t have one).'
+          type: string
+          nullable: true
+        title:
+          description: 'The title of this book.'
+          type: string
+        publicationDate:
+          description: 'The publication date of this book.'
+          type: string
+          format: date-time
+        reviews:
+          description: 'Available reviews for this book.'
+          type: array
+          items:
+            type: string
+            format: iri-reference
+    Review:
+      type: object
+      description: 'A review of a book.'
+      properties:
+        id:
+          readOnly: true
+          description: 'The id of this review.'
+          type: integer
+        author:
+          description: 'The author of the review.'
+          type: string
+        rating:
+          description: 'The rating of this review (between 0 and 5).'
+          type: integer
+        publicationDate:
+          description: 'The date of publication of this review.'
+          type: string
+          format: date-time
+          nullable: true
+        book:
+          description: 'The book this review is about.'
+          type: string
+          format: iri-reference
+          nullable: true
+    Review.jsonld:
+      type: object
+      description: 'A review of a book.'
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          description: 'The id of this review.'
+          type: integer
+        author:
+          description: 'The author of the review.'
+          type: string
+        rating:
+          description: 'The rating of this review (between 0 and 5).'
+          type: integer
+        publicationDate:
+          description: 'The date of publication of this review.'
+          type: string
+          format: date-time
+          nullable: true
+        book:
+          description: 'The book this review is about.'
+          type: string
+          format: iri-reference
+          nullable: true
+    Snake-apiRead:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        title:
+          type: string
+        length:
+          type: integer
+          nullable: true
+        snakeInfo:
+          writeOnly: true
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/SnakeInfo-apiRead'
+        snakeColors:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeColor-apiRead'
+        snakeTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeType-apiRead'
+    Snake-apiWrite:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        title:
+          type: string
+        length:
+          type: integer
+          nullable: true
+        snakeInfo:
+          writeOnly: true
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/SnakeInfo-apiWrite'
+        snakeColors:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeColor-apiWrite'
+        snakeTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeType-apiWrite'
+    Snake.jsonld-apiRead:
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        title:
+          type: string
+        length:
+          type: integer
+          nullable: true
+        snakeInfo:
+          writeOnly: true
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/SnakeInfo.jsonld-apiRead'
+        snakeColors:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeColor.jsonld-apiRead'
+        snakeTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeType.jsonld-apiRead'
+    Snake.jsonld-apiWrite:
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        title:
+          type: string
+        length:
+          type: integer
+          nullable: true
+        snakeInfo:
+          writeOnly: true
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/SnakeInfo.jsonld-apiWrite'
+        snakeColors:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeColor.jsonld-apiWrite'
+        snakeTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeType.jsonld-apiWrite'
+    SnakeColor-apiRead:
+      type: object
+      description: 'Создан с целью проверить работу OneToMany отношения'
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        color:
+          type: string
+    SnakeColor-apiWrite:
+      type: object
+      description: 'Создан с целью проверить работу OneToMany отношения'
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        color:
+          type: string
+    SnakeColor.jsonld-apiRead:
+      type: object
+      description: 'Создан с целью проверить работу OneToMany отношения'
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        color:
+          type: string
+    SnakeColor.jsonld-apiWrite:
+      type: object
+      description: 'Создан с целью проверить работу OneToMany отношения'
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        color:
+          type: string
+    SnakeInfo-apiRead:
+      type: object
+      description: 'Создан с целью проверить работу OneToOne отношения'
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        averageLength:
+          type: integer
+        snake:
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Snake-apiRead'
+    SnakeInfo-apiWrite:
+      type: object
+      description: 'Создан с целью проверить работу OneToOne отношения'
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        averageLength:
+          type: integer
+        snake:
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Snake-apiWrite'
+    SnakeInfo.jsonld-apiRead:
+      type: object
+      description: 'Создан с целью проверить работу OneToOne отношения'
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        averageLength:
+          type: integer
+        snake:
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Snake.jsonld-apiRead'
+    SnakeInfo.jsonld-apiWrite:
+      type: object
+      description: 'Создан с целью проверить работу OneToOne отношения'
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        averageLength:
+          type: integer
+        snake:
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Snake.jsonld-apiWrite'
+    SnakeType-apiRead:
+      type: object
+      description: 'Создан с целью проверить работу сразу двух OneToMany отношений'
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        typeName:
+          type: string
+    SnakeType-apiWrite:
+      type: object
+      description: 'Создан с целью проверить работу сразу двух OneToMany отношений'
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        typeName:
+          type: string
+    SnakeType.jsonld-apiRead:
+      type: object
+      description: 'Создан с целью проверить работу сразу двух OneToMany отношений'
+      properties:
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        id:
+          readOnly: true
+          type: integer
+        typeName:
+          type: string
+    SnakeType.jsonld-apiWrite:
+      type: object
+      description: 'Создан с целью проверить работу сразу двух OneToMany отношений'
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        typeName:
+          type: string
+  responses: {  }
+  parameters: {  }
+  examples: {  }
+  requestBodies: {  }
+  headers: {  }
+  securitySchemes: {  }
+security: []
+tags: []
