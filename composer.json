@@ -3,7 +3,7 @@
     "description": "Понимая ApiPlatform - см. тесты",
     "type": "project",
     "license": "proprietary",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "repositories": [
         { "type": "git", "url": "https://github.com/yapro/helpers.git"},
