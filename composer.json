@@ -12,7 +12,10 @@
         { "type": "git", "url": "https://github.com/yapro/symfony-http-client-ext.git"}
     ],
     "require": {
+    },
+    "require-dev": {
         "php": ">=7.4",
+        "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
         "api-platform/core": "*",
@@ -43,8 +46,6 @@
         "yapro/doctrine-ext": "dev-master",
         "yapro/symfony-http-client-ext": "dev-master",
         "yapro/symfony-http-test-ext": "dev-master"
-    },
-    "require-dev": {
     },
     "config": {
         "optimize-autoloader": true,
