@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace YaPro\ApiPlatformUnderstanding\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -32,31 +33,31 @@ class Book
      *
      * @ORM\Column(nullable=true)
      */
-	public ?string $isbn = null;
+    public ?string $isbn = null;
 
     /**
      * The title of this book.
      *
      * @ORM\Column(type="string", unique=true)
      */
-	public string $title = '';
+    public string $title = '';
 
     /**
      * The publication date of this book.
      *
      * @ORM\Column(type="datetime_immutable")
      */
-	public ?\DateTimeInterface $publicationDate = null;
+    public ?\DateTimeInterface $publicationDate = null;
 
     /**
-     * @var Review[]|Collection Available reviews for this book.
+     * @var Review[]|Collection available reviews for this book
      *
      * @ORM\OneToMany(targetEntity="Review", mappedBy="book", cascade={"persist"})
      */
-	public iterable $reviews;
+    public iterable $reviews;
 
-	public function __construct()
-	{
-		$this->reviews = new ArrayCollection();
-	}
+    public function __construct()
+    {
+        $this->reviews = new ArrayCollection();
+    }
 }

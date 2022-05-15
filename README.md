@@ -23,6 +23,8 @@
   добавлены 2 метода: addPropertyName и removePropertyName (PropertyName это имя свойства класса сущности).
 * чтобы работала очистка, через PUT и PATCH в аннотации к свойству нужно добавить orphanRemoval=true.
 
+![lib tests](https://github.com/yapro/api-platform-understanding/actions/workflows/main.yml/badge.svg)
+
 ## Настройки
 
 Следующая настройка заставляет \ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension использовать 
@@ -138,10 +140,10 @@ docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding
 
 Cs-Fixer: fix code
 ```sh
-docker run --user=1000:1000 --rm -v $(pwd):/app -w /app yapro/symfony-serializer-understanding:latest ./php-cs-fixer.phar fix --config=.php-cs-fixer.dist.php -v --using-cache=no --allow-risky=yes
+docker run --user=1000:1000 --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest ./php-cs-fixer.phar fix --config=.php-cs-fixer.dist.php -v --using-cache=no --allow-risky=yes
 ```
 
 PhpMd: update rules
 ```shell
-docker run --user=1000:1000 --rm -v $(pwd):/app -w /app yapro/symfony-serializer-understanding:latest ./phpmd.phar . text phpmd.xml --exclude .github/workflows,vendor --strict --generate-baseline
+docker run --user=1000:1000 --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest ./phpmd.phar . text phpmd.xml --exclude .github/workflows,vendor,var,public/bundles --strict --generate-baseline
 ```

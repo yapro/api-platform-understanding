@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace YaPro\ApiPlatformUnderstanding\Entity;
@@ -28,21 +29,21 @@ class Review
      *
      * @ORM\Column(type="text")
      */
-	public string $author = '';
+    public string $author = '';
 
-	/**
-	 * The rating of this review (between 0 and 5).
-	 *
-	 * @ORM\Column(type="smallint")
-	 */
-	public int $rating = 0;
+    /**
+     * The rating of this review (between 0 and 5).
+     *
+     * @ORM\Column(type="smallint")
+     */
+    public int $rating = 0;
 
     /**
      * The date of publication of this review.
      *
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-	public ?\DateTimeInterface $publicationDate = null;
+    public ?\DateTimeInterface $publicationDate = null;
 
     /**
      * The book this review is about.
@@ -50,5 +51,5 @@ class Review
      * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
      * @ORM\JoinColumn(nullable=true, onDelete="RESTRICT")
      */
-	public ?Book $book = null;
+    public ?Book $book = null;
 }

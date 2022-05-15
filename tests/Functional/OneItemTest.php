@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace YaPro\ApiPlatformUnderstanding\Tests\Functional;
@@ -85,6 +86,7 @@ class OneItemTest extends BaseTestCase
             }
             ');
         }
+
         return $bookId;
     }
 
@@ -118,6 +120,7 @@ class OneItemTest extends BaseTestCase
             }
             ');
         }
+
         return $bookId;
     }
 
@@ -125,6 +128,7 @@ class OneItemTest extends BaseTestCase
      * @depends testCreateExistingBook
      *
      * @param int $bookId
+     *
      * @return int
      */
     public function testGetBook(int $bookId): int
@@ -278,6 +282,7 @@ class OneItemTest extends BaseTestCase
      * @depends testGetBooks
      *
      * @param int $bookId
+     *
      * @return int
      */
     public function testUpdateBook(int $bookId): int
@@ -301,6 +306,7 @@ class OneItemTest extends BaseTestCase
               "reviews": []
             }
             ');
+
         return $this->assertResourceIsUpdated($bookId);
     }
 
@@ -375,9 +381,10 @@ class OneItemTest extends BaseTestCase
      * НЕОЖИДАННО: создаем Book не указывая значение полю "isbn", таким образом значением поля будет null, в этом случае
      * запрашивая данные видим, что в результате отсутствует поле "isbn", ApiPlatform удаляет поля со значением null. А
      * чтобы ApiPlatform оставлял поля со значением null нужно указать:
+     *
      * @ApiResource(
      *     normalizationContext={
-     *         "skip_null_values" = false
+     *         "skip_null_values": false
      *     }
      * )
      * Происходит это в \ApiPlatform\Core\Serializer\SerializerContextBuilder::createFromRequest() и это очень странное

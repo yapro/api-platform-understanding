@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace YaPro\ApiPlatformUnderstanding\Entity;
@@ -63,6 +64,7 @@ class SnakeColor
     public function setColor(string $color): SnakeColor
     {
         $this->color = $color;
+
         return $this;
     }
 }

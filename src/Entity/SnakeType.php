@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace YaPro\ApiPlatformUnderstanding\Entity;
@@ -63,6 +64,7 @@ class SnakeType
     public function setTypeName(string $typeName): SnakeType
     {
         $this->typeName = $typeName;
+
         return $this;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace YaPro\ApiPlatformUnderstanding\Entity;
@@ -68,6 +69,7 @@ class SnakeCountry
     public function setCountryName(string $countryName): self
     {
         $this->countryName = $countryName;
+
         return $this;
     }
 }

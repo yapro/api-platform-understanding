@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace YaPro\ApiPlatformUnderstanding\Entity;
@@ -6,8 +7,8 @@ namespace YaPro\ApiPlatformUnderstanding\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -15,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *     normalizationContext={
  *         "groups": {"apiRead"},
- *         "skip_null_values" = false
+ *         "skip_null_values": false
  *     },
  *     denormalizationContext={
  *         "groups": {"apiWrite"}
@@ -57,7 +58,7 @@ class Snake
      * @ApiSubresource
      * @Groups({"apiRead", "apiWrite"})
      */
-	private iterable $snakeColors;
+    private iterable $snakeColors;
 
     /**
      * @var SnakeType[]|Collection
@@ -76,12 +77,12 @@ class Snake
      */
     private iterable $snakeCountries;
 
-	public function __construct()
-	{
-		$this->snakeColors = new ArrayCollection();
+    public function __construct()
+    {
+        $this->snakeColors = new ArrayCollection();
         $this->snakeTypes = new ArrayCollection();
         $this->snakeCountries = new ArrayCollection();
-	}
+    }
 
     public function getTitle(): string
     {
@@ -91,6 +92,7 @@ class Snake
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -105,7 +107,6 @@ class Snake
         return $this->snakeInfo;
     }
 
-    //
     public function setSnakeInfo(?SnakeInfo $snakeInfo, bool $updateRelation = true): void
     {
         $this->snakeInfo = $snakeInfo;

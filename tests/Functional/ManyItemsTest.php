@@ -106,6 +106,7 @@ class ManyItemsTest extends BaseTestCase
           "snakeCountries":[]
         }
         ');
+
         return $this->assertResourceIsCreated();
     }
 
@@ -113,6 +114,7 @@ class ManyItemsTest extends BaseTestCase
      * ОЖИДАЕМО: мы не только создали еще одну Snake, но и отвязали от Snake=1 запись SnakeColor=2, привязав её к новой Snake
      *
      * @depends testCreateSnakeAndTwoSnakeColor
+     *
      * @return int
      */
     public function testCreateSnakeWithExistingSnakeColor(): int
@@ -146,6 +148,7 @@ class ManyItemsTest extends BaseTestCase
           "snakeCountries":[]
         }
         ');
+
         return $this->assertResourceIsCreated();
     }
 
@@ -153,6 +156,7 @@ class ManyItemsTest extends BaseTestCase
      * ОЖИДАЕМО: изменяем Snake.title, отвязываем SnakeColor=1, привязываем SnakeColor=2
      *
      * @depends testCreateSnakeAndTwoSnakeColor
+     *
      * @return int
      */
     public function testUpdateSnake1AndRemoveSnakeColor1AndAddSnakeColor2(): int
@@ -186,6 +190,7 @@ class ManyItemsTest extends BaseTestCase
           "snakeCountries":[]
         }
         ');
+
         return $this->assertResourceIsUpdated();
     }
 
@@ -267,7 +272,6 @@ class ManyItemsTest extends BaseTestCase
         $this->assertTrue($snakeColorFromDb instanceof SnakeColor);
         // итог: ранее привязанные SnakeColor`s не удаляются из бд, а отвязываются от Snake
     }
-
 
     /**
      * @depends testUpdateSnake1AndRemoveSnakeColors
@@ -351,6 +355,7 @@ class ManyItemsTest extends BaseTestCase
           "snakeCountries":[]
         }
         ');
+
         return $this->assertResourceIsCreated();
     }
 
@@ -385,6 +390,7 @@ class ManyItemsTest extends BaseTestCase
           "snakeCountries":[]
         }
         ');
+
         return $this->assertResourceIsUpdated();
     }
 
@@ -431,6 +437,7 @@ class ManyItemsTest extends BaseTestCase
           ]
         }
         ');
+
         return $this->assertResourceIsCreated();
     }
 }
