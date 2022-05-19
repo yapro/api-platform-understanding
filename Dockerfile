@@ -36,6 +36,7 @@ USER $USER
 
 ENV COMPOSER_HOME=/tmp/composer-home
 RUN mkdir $COMPOSER_HOME
+RUN chmod -R 777 $COMPOSER_HOME
 # Сохраняем конфигурацию глобально в файле: $COMPOSER_HOME/config.json
 RUN composer config --global "preferred-install.yapro/*" source
 # Check alternative: composer update yapro/* --prefer-source
