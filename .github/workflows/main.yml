@@ -34,4 +34,7 @@ jobs:
     - run: docker run --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest ./phpmd.phar . text phpmd.xml --exclude .github/workflows,vendor,var,public/bundles --strict
     - run: docker run --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest ./php-cs-fixer.phar fix --config=.php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no --allow-risky=yes --diff
     - run: docker run --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest composer install --optimize-autoloader --no-scripts --no-interaction
-    - run: docker run --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest bin/phpunit
+    - run: docker run --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest bash -c "cd /app && \
+      bin/console doctrine:schema:drop --full-database --force -v && \
+      bin/console doctrine:schema:update --force -v && \
+      bin/phpunit tests/Functional"
