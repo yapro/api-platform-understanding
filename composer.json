@@ -35,7 +35,7 @@
         "symfony/property-access": "*",
         "symfony/property-info": "*",
         "symfony/proxy-manager-bridge": "*",
-        "symfony/runtime": "5.3.*",
+        "symfony/runtime": "*",
         "symfony/security-bundle": "*",
         "symfony/serializer": "*",
         "symfony/twig-bundle": "*",
