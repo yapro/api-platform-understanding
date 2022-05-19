@@ -34,4 +34,4 @@ jobs:
     - run: docker run --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest ./phpmd.phar . text phpmd.xml --exclude .github/workflows,vendor,var,public/bundles --strict
     - run: docker run --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest ./php-cs-fixer.phar fix --config=.php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no --allow-risky=yes --diff
     - run: docker run --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest composer install --optimize-autoloader --no-scripts --no-interaction
-    - run: docker run --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest vendor/bin/phpunit --testsuite=Unit
+    - run: docker run --rm -v $(pwd):/app -w /app yapro/api-platform-understanding:latest bin/phpunit
