@@ -104,7 +104,7 @@ docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding
   bin/console doctrine:schema:update --force -v && \
   bin/diff-openapi.sh"
 ```
-Текущая схема находится по адресу public/oas/api-platform.yaml Ее можно открыть в редакторе https://editor.swagger.io/
+Текущая схема находится по адресу public/oas/api-platform.yaml и её можно открыть в редакторе https://editor.swagger.io/
 
 А еще можно выполнить команду ниже и смотреть по адресу: http://127.0.0.1:8000/api
 
