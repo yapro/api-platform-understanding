@@ -75,7 +75,8 @@ class ManyItemsTest extends BaseTestCase
           "snakeColors": [
             {"color": "white"},
             {"color": "black"}
-          ]
+          ],
+          "snakeCountries": []
         }
         ');
         $this->assertJsonResponse('
@@ -101,7 +102,8 @@ class ManyItemsTest extends BaseTestCase
                 "color": "black"
               }
           ],
-          "snakeTypes":[]
+          "snakeTypes":[],
+          "snakeCountries":[]
         }
         ');
         return $this->assertResourceIsCreated();
@@ -140,7 +142,8 @@ class ManyItemsTest extends BaseTestCase
                 "color": "black"
               }
           ],
-          "snakeTypes":[]
+          "snakeTypes":[],
+          "snakeCountries":[]
         }
         ');
         return $this->assertResourceIsCreated();
@@ -179,7 +182,8 @@ class ManyItemsTest extends BaseTestCase
                 "color": "black"
               }
           ],
-          "snakeTypes":[]
+          "snakeTypes":[],
+          "snakeCountries":[]
         }
         ');
         return $this->assertResourceIsUpdated();
@@ -214,7 +218,8 @@ class ManyItemsTest extends BaseTestCase
                 "color": "black"
               }
           ],
-          "snakeTypes":[]
+          "snakeTypes":[],
+          "snakeCountries":[]
         }
         ');
         $this->assertResourceIsUpdated();
@@ -250,7 +255,8 @@ class ManyItemsTest extends BaseTestCase
           "length": 123,
           "snakeInfo":null,
           "snakeColors": [],
-          "snakeTypes":[]
+          "snakeTypes":[],
+          "snakeCountries":[]
         }
         ');
         $this->assertResourceIsUpdated();
@@ -309,7 +315,8 @@ class ManyItemsTest extends BaseTestCase
                 "id": 1,
                 "typeName": "nonpoisonous"
               }
-          ]
+          ],
+          "snakeCountries":[]
         }
         ');
     }
@@ -340,11 +347,13 @@ class ManyItemsTest extends BaseTestCase
               "averageLength": 123
           },
           "snakeColors": [],
-          "snakeTypes":[]
+          "snakeTypes":[],
+          "snakeCountries":[]
         }
         ');
         return $this->assertResourceIsCreated();
     }
+
     public function testUpdateSnakeAndSnakeInfo(): int
     {
         $this->putLd('/api/snakes/4', '
@@ -372,9 +381,56 @@ class ManyItemsTest extends BaseTestCase
               "averageLength": 12345
           },
           "snakeColors": [],
-          "snakeTypes":[]
+          "snakeTypes":[],
+          "snakeCountries":[]
         }
         ');
         return $this->assertResourceIsUpdated();
+    }
+
+    // Выше были тесты, когда SnakeColor можно было создать без связи с Snake, а в данном тесте мы проверяем создание
+    // SnakeCountries которые не могут существовать без Snake, но Snake может обходиться без SnakeCountries
+    public function testCreateSnakeAndTwoSnakeCountries(): int
+    {
+        self::truncateAllTablesInSqLite();
+
+        $this->postLd('/api/snakes', '
+        {
+          "title": "cobra",
+          "snakeColors": [],
+          "snakeCountries": [
+            {"countryName": "Russia"},
+            {"countryName": "China"}
+          ]
+        }
+        ');
+        $this->assertJsonResponse('
+        {
+          "@context": "/api/contexts/Snake",
+          "@id": "/api/snakes/1",
+          "@type": "Snake",
+          "id": 1,
+          "title": "cobra",
+          "length": null,
+          "snakeInfo": null,
+          "snakeColors": [],
+          "snakeTypes":[],
+          "snakeCountries":[
+            {
+                "@id": "/api/snake_countries/1",
+                "@type": "SnakeCountry",
+                "id": 1,
+                "countryName": "Russia"
+            },
+            {
+                "@id": "/api/snake_countries/2",
+                "@type": "SnakeCountry",
+                "id": 2,
+                "countryName": "China"
+            }
+          ]
+        }
+        ');
+        return $this->assertResourceIsCreated();
     }
 }

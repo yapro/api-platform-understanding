@@ -87,14 +87,13 @@ docker build -t yapro/api-platform-understanding:latest -f ./Dockerfile ./
 
 ```sh
 docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app && \
-  COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-scripts --no-interaction && \
   bin/console doctrine:schema:drop --full-database --force -v && \
   bin/console doctrine:schema:update --force -v && \
   bin/phpunit tests/Functional"
 ```
 Если тесты падают, попробуйте выполнить: ln -sf composer.lock.dist composer.lock
 
-### Tests OAS
+### Запуск bin/diff-openapi.sh чтобы найти изменения в OAS-контракте
 
 ```sh
 docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app && \
@@ -103,7 +102,7 @@ docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding
   bin/console doctrine:schema:update --force -v && \
   bin/diff-openapi.sh"
 ```
-Текущую схему находится по адресу public/oas/api-platform.yaml Ее можно открыть в редакторе https://editor.swagger.io/
+Текущая схема находится по адресу public/oas/api-platform.yaml Ее можно открыть в редакторе https://editor.swagger.io/
 
 А еще можно выполнить команду ниже и смотреть по адресу: http://127.0.0.1:8000/api
 
@@ -136,3 +135,13 @@ docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding
 
 - https://xdebug.org/docs/upgrade_guide
 - https://www.jetbrains.com/help/phpstorm/2021.1/debugging-a-php-cli-script.html
+
+Cs-Fixer: fix code
+```sh
+docker run --user=1000:1000 --rm -v $(pwd):/app -w /app yapro/symfony-serializer-understanding:latest ./php-cs-fixer.phar fix --config=.php-cs-fixer.dist.php -v --using-cache=no --allow-risky=yes
+```
+
+PhpMd: update rules
+```shell
+docker run --user=1000:1000 --rm -v $(pwd):/app -w /app yapro/symfony-serializer-understanding:latest ./phpmd.phar . text phpmd.xml --exclude .github/workflows,vendor --strict --generate-baseline
+```

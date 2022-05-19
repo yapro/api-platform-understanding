@@ -68,10 +68,19 @@ class Snake
      */
     private iterable $snakeTypes;
 
+    /**
+     * @var SnakeCountry[]|Collection
+     *
+     * @ORM\OneToMany(targetEntity="SnakeCountry", mappedBy="snake", cascade={"persist"})
+     * @Groups({"apiRead", "apiWrite"})
+     */
+    private iterable $snakeCountries;
+
 	public function __construct()
 	{
 		$this->snakeColors = new ArrayCollection();
         $this->snakeTypes = new ArrayCollection();
+        $this->snakeCountries = new ArrayCollection();
 	}
 
     public function getTitle(): string
@@ -151,11 +160,35 @@ class Snake
         }
     }
 
+    /**
+     * @return Collection|SnakeCountry[]
+     */
+    public function getSnakeCountries()
+    {
+        return $this->snakeCountries;
+    }
+
     public function removeSnakeType(SnakeType $snakeType, bool $updateRelation = true): void
     {
         $this->snakeTypes->removeElement($snakeType);
         if ($updateRelation) {
             $snakeType->setSnake(null, false);
         }
+    }
+
+    public function addSnakeCountry(SnakeCountry $snakeCountry, bool $updateRelation = true)
+    {
+        if ($this->snakeCountries->contains($snakeCountry)) {
+            return;
+        }
+        $this->snakeCountries->add($snakeCountry);
+        if ($updateRelation) {
+            $snakeCountry->setSnake($this, false);
+        }
+    }
+
+    public function removeSnakeCountry(SnakeCountry $snakeCountry): void
+    {
+        $this->snakeCountries->removeElement($snakeCountry);
     }
 }
