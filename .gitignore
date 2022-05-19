@@ -1,5 +1,4 @@
 /.idea
-/composer.lock
 /symfony.lock
 /db.sqlite
 
