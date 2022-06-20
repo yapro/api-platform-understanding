@@ -71,6 +71,8 @@ class Book {
 @ApiSubresource(maxDepth=1)
 @ApiProperty(attributes={"fetchEager": false, "fetchable": false})
 @SerializedName("public_field_name")
+@ApiFilter(SearchFilter::class, strategy="ipartial")
+@ApiFilter(OrderFilter::class, properties={"id", "author", "publicationDate"})
 ```
 
 ## Как запустить тесты или поправить их
