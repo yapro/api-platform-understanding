@@ -73,6 +73,23 @@ class Book {
 @SerializedName("public_field_name")
 ```
 
+### Автоматические группы apiRead/apiWrite
+
+Следующий пример демонстрирует, как можно автоматически (при необходимости динамично) выставлять группы apiRead/apiWrite
+всем (или некоторым) атрибутам сущностей:
+
+```yaml
+    YaPro\ApiPlatformUnderstanding\Wrapper\ClassMetadataFactoryWrapper:
+        # overrides the "decorates" service, but that service is still available as ".inner"
+        decorates: 'api_platform.serializer.mapping.class_metadata_factory'
+        arguments: [ '@.inner' ]
+        decoration_priority: -20
+    # чтобы ApiPlatform не кэшировал значение возвращаемое методом ClassMetadataFactoryWrapper::getMetadataFor заменяем:
+    'api_platform.cache.metadata.property':
+      class: Symfony\Component\Cache\Adapter\ArrayAdapter
+```
+См. [src/Wrapper/ClassMetadataFactoryWrapper.php](src/Wrapper/ClassMetadataFactoryWrapper.php)
+
 ## Как запустить тесты или поправить их
 
 Предисловие: в репозитории имеется файл composer.lock.dist, необходимый, чтобы понимать, когда и при каких версиях
