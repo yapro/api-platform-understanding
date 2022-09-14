@@ -66,6 +66,27 @@ class Book {
     private $author;
 }
 ```
+
+## skip_null_values (default: true)
+
+А если указать "skip_null_values": false в:
+- denormalizationContext - то в реквесте все свойства объекта должны быть указаны, даже nullable
+- normalizationContext - то в респонсе все свойства объекта будут присутствовать, даже со значением null
+
+Где указывается:
+```php
+ * @ApiResource(
+ *     normalizationContext={
+ *         "groups": {"apiRead"},
+ *         "skip_null_values": false
+ *     },
+ *     denormalizationContext={
+ *         "groups": {"apiWrite"},
+ *         "skip_null_values": false
+ *     }
+ * )
+```
+
 Интересные аннотации:
 ```injectablephp
 @ApiSubresource(maxDepth=1)
