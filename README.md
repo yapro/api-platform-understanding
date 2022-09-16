@@ -51,6 +51,8 @@ private Collection $products;
 ```
 Т.е. отношения запрашивать будем из самой коллекции, например: "/api/products" c фильтром по свойству bundle.
 
+### MaxDepth
+
 Если все-таки потребуется получать сразу коллекцию, то укажем отдельную группу "Company:apiRead" для свойства $products, 
 на необходимую глубину отношений с помощью Symfony\Component\Serializer\Annotation\MaxDepth + enable_max_depth:
 ```injectablephp
@@ -66,8 +68,9 @@ class Book {
     private $author;
 }
 ```
+Еще есть интересная аннотация: @ApiSubresource(maxDepth=1)
 
-## skip_null_values (default: true)
+### skip_null_values (default: true)
 
 А если указать "skip_null_values": false в:
 - denormalizationContext - то в реквесте все свойства объекта должны быть указаны, даже nullable
@@ -89,7 +92,6 @@ class Book {
 
 Интересные аннотации:
 ```injectablephp
-@ApiSubresource(maxDepth=1)
 @ApiProperty(attributes={"fetchEager": false, "fetchable": false})
 @SerializedName("public_field_name")
 @ApiFilter(SearchFilter::class, strategy="ipartial")
