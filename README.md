@@ -153,7 +153,7 @@ docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding
 ### Dev
 
 ```sh
-docker run -it --rm --user=1000:1000 --net=host -v $(pwd):/app -w /app yapro/api-platform-understanding:latest bash
+docker run -it --rm --user=$(id -u):$(id -g) --net=host -v $(pwd):/app -w /app yapro/api-platform-understanding:latest bash
 COMPOSER_MEMORY_LIMIT=-1 composer install -o && \
 bin/console doctrine:schema:drop --full-database --force -v && \
 bin/console doctrine:schema:update --force -v && \
@@ -165,14 +165,14 @@ php -S 127.0.0.1:8000 -t public
 
 В phpunit.xml.dist поменяйте APP_ENV на test и запустите:
 ```sh
-docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app && \
+docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/app --add-host=host.docker.internal:host-gateway yapro/api-platform-understanding:latest bash -c "cd /app && \
   COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-scripts --no-interaction && \
   bin/console doctrine:schema:drop --full-database --force -v && \
   bin/console doctrine:schema:update --force -v && \
   PHP_IDE_CONFIG=\"serverName=common\" \
   XDEBUG_SESSION=common \
   XDEBUG_MODE=debug \
-  XDEBUG_CONFIG=\"max_nesting_level=200 client_port=9003 client_host=172.16.30.130\" \
+  XDEBUG_CONFIG=\"max_nesting_level=200 client_port=9003 client_host=host.docker.internal\" \
   bin/phpunit --cache-result-file=/tmp/phpunit.cache tests/Functional"
 ```
 Если с xdebug что-то не получается, напишите: php -dxdebug.log='/tmp/xdebug.log' и смотрите в лог.

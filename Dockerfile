@@ -13,12 +13,12 @@ RUN apt-get install -y \
 RUN docker-php-ext-configure zip \
     && docker-php-ext-install zip
 
+RUN case "$PHP_VERSION" in ( "8"* ) pecl install xdebug;; ( * ) pecl install  xdebug-3.1.5;; esac && \
+    docker-php-ext-enable xdebug
+
 # Install composer
 RUN curl https://getcomposer.org/download/2.0.12/composer.phar --output /usr/bin/composer && \
     chmod +x /usr/bin/composer
-
-# Install xdebug extension
-RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 # мне удобно править библиотеки сразу в директории vendor, но чтобы composer смог устанавливать библиотеки из сорцов, composer-у нужен гит
 RUN apt-get install -y git

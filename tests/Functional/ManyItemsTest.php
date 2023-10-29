@@ -396,7 +396,7 @@ class ManyItemsTest extends BaseTestCase
 
     // Выше были тесты, когда SnakeColor можно было создать без связи с Snake, а в данном тесте мы проверяем создание
     // SnakeCountries которые не могут существовать без Snake, но Snake может обходиться без SnakeCountries
-    public function testCreateSnakeAndTwoSnakeCountries(): int
+    public function testCreateSnakeAndTwoSnakeCountries()
     {
         self::truncateAllTablesInSqLite();
 
@@ -437,7 +437,47 @@ class ManyItemsTest extends BaseTestCase
           ]
         }
         ');
+        $this->assertResourceIsCreated();
+        /*
+        Попытка написать тест добавляющий дочернюю сущность с указанием существующей сущности завершилась неудаче -
+        следующие 2 запроса не работают в следствии того, что возникает ошибка:
+            "The total number of joined relations has exceeded the specified maximum. Raise the limit if necessary with the
+            "api_platform.eager_loading.max_joins" configuration key
+            (https://api-platform.com/docs/core/performance/#eager-loading), or limit the maximum serialization depth using
+            the "enable_max_depth" option of the Symfony serializer
+            (https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)." at
+            /app/vendor/api-platform/core/src/Bridge/Doctrine/Orm/Extension/EagerLoadingExtension.php line 137
+        а возникает она из-за того, что:
+        1. когда мы указываем Snake, он вытягивается из базы
+        2. Snake полученный из базы тянет за собой все ему известные SnakeCountry
+        3. SnakeCountry снова вытягивают Snake (да, он закэширован)
+        4. дальше происходит рекурсия - повторение шагов 2 и 3 по-очереди до возникновения выше указанной ошибки.
+        Как это можно в теории можно починить, пара способов:
+        1. нужно в запросе иметь переменную, которая говорила бы на какую грубину должны вытягивать зависимости
+        2. в методе \ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension::joinRelations изменить:
+            if (0 === $currentDepth && ($normalizationContext[AbstractObjectNormalizer::ENABLE_MAX_DEPTH] ?? false)) {
+            так, чтобы учитывалось значение -1 (возникающее, когда "enable_max_depth"=true + аннотация @MaxDepth(1)
+            объявлена к свойствам обоих зависимых классов.
 
-        return $this->assertResourceIsCreated();
+        $this->postLd('/api/snake_countries', '
+        {
+          "countryName": "USA",
+          "snake": {
+              "@id": "/api/snakes/1",
+              "@type": "Snake",
+              "id": 1
+          }
+        }
+        ');
+
+        $this->postLd('/api/snake_countries', '
+        {
+          "countryName": "USA",
+          "snake": "/api/snakes/1"
+        }
+        ');
+
+        this->assertResourceIsCreated();
+        */
     }
 }
