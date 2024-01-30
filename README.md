@@ -90,12 +90,27 @@ class Book {
  * )
 ```
 
+Запретить доступ к чтению и записи в поле, но дать доступ на чтение IRI можно так:
+```injectablephp
+use ApiPlatform\Core\Annotation\ApiProperty;
+ /**
+ * @Groups({"apiRead", "apiWrite"})
+ * @ApiProperty(readableLink=false, writableLink=false)
+ */
+private Book $parent;
+```
+Таким образом можно ограничить рекурсию - например ссылка на другую сущность или на запись родителя.
+
+Разрешить искать и сортировать записи можно так:
+```injectablephp
+@ApiFilter(SearchFilter::class, strategy="ipartial")
+@ApiFilter(OrderFilter::class, properties={"id", "author", "publicationDate"})
+```
+
 Интересные аннотации:
 ```injectablephp
 @ApiProperty(attributes={"fetchEager": false, "fetchable": false})
 @SerializedName("public_field_name")
-@ApiFilter(SearchFilter::class, strategy="ipartial")
-@ApiFilter(OrderFilter::class, properties={"id", "author", "publicationDate"})
 ```
 
 ### Автоматические группы apiRead/apiWrite
@@ -114,6 +129,24 @@ class Book {
       class: Symfony\Component\Cache\Adapter\ArrayAdapter
 ```
 См. [src/Wrapper/ClassMetadataFactoryWrapper.php](src/Wrapper/ClassMetadataFactoryWrapper.php)
+
+### Дополнительные группы сериализации
+
+Это можно сделать, создав для сущности дополнительный эндпоинт (не обязательно писать свой, можно через аннотации):
+```injectablephp
+ *         "put_links_box_reuses": {
+ *             "method": "PUT",
+ *             "path": "/book/{id}/reviews",
+ *             "controller": PlaceholderAction::class,
+ *             "openapi_context": {"summary": "UPSERT коллекции для указанной сущности"},
+ *             "requirements": {"id": "\d+"},
+ *             "denormalization_context": {"groups": {"reviews-write"}}
+ *         },
+```
+Именно так делать не нужно, потому что ApiPlatform из коробки дает возможность делать такой Upsert, но как пример эта
+ситуация очень хороша, кстати вот полный пример:
+
+<img src="docs/images/additional-serialization-groups.png">
 
 ## Как запустить тесты или поправить их
 
@@ -148,9 +181,18 @@ docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding
 ```
 Текущая схема находится по адресу public/oas/api-platform.yaml и её можно открыть в редакторе https://editor.swagger.io/
 
-А еще можно выполнить команду ниже и смотреть по адресу: http://127.0.0.1:8000/api
+Перегенерировать схему можно так:
+```shell
+docker run --rm --user=1000:1000 -v $(pwd):/app yapro/api-platform-understanding:latest bash -c "cd /app && \
+  COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-scripts --no-interaction && \
+  bin/console doctrine:schema:drop --full-database --force -v && \
+  bin/console doctrine:schema:update --force -v && \
+  bin/console api:openapi:export --yaml --env=test --output=public/oas/api-platform.yaml"
+```
 
 ### Dev
+
+А еще можно выполнить команду ниже и смотреть по адресу: http://127.0.0.1:8000/api
 
 ```sh
 docker run -it --rm --user=$(id -u):$(id -g) --net=host -v $(pwd):/app -w /app yapro/api-platform-understanding:latest bash

@@ -439,7 +439,7 @@ class ManyItemsTest extends BaseTestCase
         ');
         $this->assertResourceIsCreated();
         /*
-        Попытка написать тест добавляющий дочернюю сущность с указанием существующей сущности завершилась неудаче -
+        Попытка написать тест добавляющий дочернюю сущность с указанием существующей сущности завершилась неудачей -
         следующие 2 запроса не работают в следствии того, что возникает ошибка:
             "The total number of joined relations has exceeded the specified maximum. Raise the limit if necessary with the
             "api_platform.eager_loading.max_joins" configuration key
@@ -478,6 +478,26 @@ class ManyItemsTest extends BaseTestCase
         ');
 
         this->assertResourceIsCreated();
+        */
+
+        /* Следующая идея - сделать setter который будет делать магию - превращать ID родителя в объект родителя -
+        $this->postLd('/api/snake_countries', '
+        {
+          "countryName": "USA",
+          "snakeId": {
+              "@id": "/api/snakes/1",
+              "@type": "Snake",
+              "id": 1
+          }
+        }
+        ');
+        Увы, не получилось, т.к. в сущности нет $entityManager-а:
+        public function setSnakeId(int $snakeId): self
+        {
+            $this->countryName = $entityManager->getreference(Snake::class, $snakeId);
+
+            return $this;
+        }
         */
     }
 }

@@ -878,6 +878,296 @@ paths:
         required: true
       deprecated: false
     parameters: []
+  /api/snake_countries:
+    get:
+      operationId: getSnakeCountryCollection
+      tags:
+        - SnakeCountry
+      responses:
+        200:
+          description: 'SnakeCountry collection'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/SnakeCountry.jsonld-apiRead' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeCountry-apiRead'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnakeCountry-apiRead'
+      summary: 'Retrieves the collection of SnakeCountry resources.'
+      description: 'Retrieves the collection of SnakeCountry resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: itemsPerPage
+          in: query
+          description: 'The number of items per page'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 2
+            minimum: 0
+            maximum: 100
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: pagination
+          in: query
+          description: 'Enable or disable pagination'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+      deprecated: false
+    post:
+      operationId: postSnakeCountryCollection
+      tags:
+        - SnakeCountry
+      responses:
+        201:
+          description: 'SnakeCountry resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry-apiRead'
+          links:
+            GetSnakeCountryItem:
+              operationId: getSnakeCountryItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_countries/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a SnakeCountry resource.'
+      description: 'Creates a SnakeCountry resource.'
+      parameters: []
+      requestBody:
+        description: 'The new SnakeCountry resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/SnakeCountry.jsonld-apiWrite'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnakeCountry-apiWrite'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/SnakeCountry-apiWrite'
+        required: true
+      deprecated: false
+    parameters: []
+  '/api/snake_countries/{id}':
+    get:
+      operationId: getSnakeCountryItem
+      tags:
+        - SnakeCountry
+      responses:
+        200:
+          description: 'SnakeCountry resource'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry-apiRead'
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a SnakeCountry resource.'
+      description: 'Retrieves a SnakeCountry resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    put:
+      operationId: putSnakeCountryItem
+      tags:
+        - SnakeCountry
+      responses:
+        200:
+          description: 'SnakeCountry resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry-apiRead'
+          links:
+            GetSnakeCountryItem:
+              operationId: getSnakeCountryItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_countries/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Replaces the SnakeCountry resource.'
+      description: 'Replaces the SnakeCountry resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated SnakeCountry resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/SnakeCountry.jsonld-apiWrite'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnakeCountry-apiWrite'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/SnakeCountry-apiWrite'
+        required: true
+      deprecated: false
+    delete:
+      operationId: deleteSnakeCountryItem
+      tags:
+        - SnakeCountry
+      responses:
+        204:
+          description: 'SnakeCountry resource deleted'
+        404:
+          description: 'Resource not found'
+      summary: 'Removes the SnakeCountry resource.'
+      description: 'Removes the SnakeCountry resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    patch:
+      operationId: patchSnakeCountryItem
+      tags:
+        - SnakeCountry
+      responses:
+        200:
+          description: 'SnakeCountry resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry.jsonld-apiRead'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry-apiRead'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SnakeCountry-apiRead'
+          links:
+            GetSnakeCountryItem:
+              operationId: getSnakeCountryItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/snake_countries/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Updates the SnakeCountry resource.'
+      description: 'Updates the SnakeCountry resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated SnakeCountry resource'
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/SnakeCountry-apiWrite'
+        required: true
+      deprecated: false
+    parameters: []
   /api/snake_infos:
     get:
       operationId: getSnakeInfoCollection
@@ -1944,7 +2234,7 @@ components:
           type: string
           format: date-time
         reviews:
-          description: 'Available reviews for this book.'
+          description: 'available reviews for this book'
           type: array
           items:
             type: string
@@ -1992,7 +2282,7 @@ components:
           type: string
           format: date-time
         reviews:
-          description: 'Available reviews for this book.'
+          description: 'available reviews for this book'
           type: array
           items:
             type: string
@@ -2081,7 +2371,6 @@ components:
           type: integer
           nullable: true
         snakeInfo:
-          writeOnly: true
           nullable: true
           anyOf:
             -
@@ -2094,6 +2383,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SnakeType-apiRead'
+        snakeCountries:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeCountry-apiRead'
     Snake-apiWrite:
       type: object
       description: ''
@@ -2107,7 +2400,6 @@ components:
           type: integer
           nullable: true
         snakeInfo:
-          writeOnly: true
           nullable: true
           anyOf:
             -
@@ -2120,6 +2412,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SnakeType-apiWrite'
+        snakeCountries:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeCountry-apiWrite'
     Snake.jsonld-apiRead:
       type: object
       description: ''
@@ -2156,7 +2452,6 @@ components:
           type: integer
           nullable: true
         snakeInfo:
-          writeOnly: true
           nullable: true
           anyOf:
             -
@@ -2169,6 +2464,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SnakeType.jsonld-apiRead'
+        snakeCountries:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeCountry.jsonld-apiRead'
     Snake.jsonld-apiWrite:
       type: object
       description: ''
@@ -2205,7 +2504,6 @@ components:
           type: integer
           nullable: true
         snakeInfo:
-          writeOnly: true
           nullable: true
           anyOf:
             -
@@ -2218,6 +2516,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SnakeType.jsonld-apiWrite'
+        snakeCountries:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnakeCountry.jsonld-apiWrite'
     SnakeColor-apiRead:
       type: object
       description: 'Создан с целью проверить работу OneToMany отношения'
@@ -2300,6 +2602,88 @@ components:
           type: integer
         color:
           type: string
+    SnakeCountry-apiRead:
+      type: object
+      description: 'Создан с целью проверить работу обязательного OneToMany отношения'
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        countryName:
+          type: string
+    SnakeCountry-apiWrite:
+      type: object
+      description: 'Создан с целью проверить работу обязательного OneToMany отношения'
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        countryName:
+          type: string
+    SnakeCountry.jsonld-apiRead:
+      type: object
+      description: 'Создан с целью проверить работу обязательного OneToMany отношения'
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        countryName:
+          type: string
+    SnakeCountry.jsonld-apiWrite:
+      type: object
+      description: 'Создан с целью проверить работу обязательного OneToMany отношения'
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        countryName:
+          type: string
     SnakeInfo-apiRead:
       type: object
       description: 'Создан с целью проверить работу OneToOne отношения'
@@ -2309,11 +2693,6 @@ components:
           type: integer
         averageLength:
           type: integer
-        snake:
-          nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/Snake-apiRead'
     SnakeInfo-apiWrite:
       type: object
       description: 'Создан с целью проверить работу OneToOne отношения'
@@ -2323,11 +2702,6 @@ components:
           type: integer
         averageLength:
           type: integer
-        snake:
-          nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/Snake-apiWrite'
     SnakeInfo.jsonld-apiRead:
       type: object
       description: 'Создан с целью проверить работу OneToOne отношения'
@@ -2360,11 +2734,6 @@ components:
           type: integer
         averageLength:
           type: integer
-        snake:
-          nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/Snake.jsonld-apiRead'
     SnakeInfo.jsonld-apiWrite:
       type: object
       description: 'Создан с целью проверить работу OneToOne отношения'
@@ -2397,11 +2766,6 @@ components:
           type: integer
         averageLength:
           type: integer
-        snake:
-          nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/Snake.jsonld-apiWrite'
     SnakeType-apiRead:
       type: object
       description: 'Создан с целью проверить работу сразу двух OneToMany отношений'
